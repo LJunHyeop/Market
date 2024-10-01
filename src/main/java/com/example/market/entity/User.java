@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Table(name = "user")
 public class User extends UpdateAt{
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userPk;
 
     @Column
@@ -41,15 +41,4 @@ public class User extends UpdateAt{
     @Column
     @Comment("핸드폰 넘버")
     private String userPhone;
-    /*
-    @CreationTimestamp
-    @Column
-    private LocalDateTime createAt;
-
-    @UpdateTimestamp
-    @Column
-    private LocalDateTime UpdateAt;
-
-     */
-
 }
