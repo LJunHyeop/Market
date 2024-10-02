@@ -1,8 +1,14 @@
 package com.example.market.entity;
 
-import org.hibernate.annotations.* ;
+import org.hibernate.annotations.Comment ;
 
-import jakarta.persistence.* ;
+import jakarta.persistence.Column ;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,4 +38,8 @@ public class Product extends UpdateAt {
     @Column
     @Comment("좋아요")
     private int productLike ;
+
+    @Column
+    @Comment("상품 게시글")
+    private String productComment ;
 }
