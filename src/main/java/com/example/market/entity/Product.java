@@ -16,9 +16,10 @@ public class Product extends UpdateAt {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private long productPk ;
 
-    @JoinColumn(name="user_pk", nullable = false)
+    @JoinColumn(name = "user_pk", nullable = false)
     @Comment("유저 FK")
-    private User user ;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
 
     @Column
     @Comment("상품 이름")
