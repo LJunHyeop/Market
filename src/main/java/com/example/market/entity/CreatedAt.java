@@ -10,6 +10,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -20,6 +21,6 @@ import java.util.Date;
 public class CreatedAt {
     @Column(nullable = false)
     @CreatedDate
-    private Date CreatedAt;
+    private LocalDateTime CreatedAt;
 
 }
