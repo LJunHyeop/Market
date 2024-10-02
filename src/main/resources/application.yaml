@@ -11,9 +11,9 @@ spring:
     import: optional:file:env/dev-db.env[.properties]
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: ${DEFAULT_DB_URL}
-    username: ${DEFAULT_DB_USERNAME}
-    password: ${DEFAULT_DB_PASSWORD}
+    url: jdbc:mariadb://gybproject.com:3306/market
+    username: market
+    password: green1234
   jpa:
     hibernate:
       ddl-auto: update

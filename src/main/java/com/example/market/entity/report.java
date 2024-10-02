@@ -1,7 +1,6 @@
 package com.example.market.entity;
 
 import jakarta.persistence.*;
-import org.checkerframework.checker.units.qual.C;
 import org.hibernate.annotations.Comment;
 
 @Entity
@@ -29,5 +28,4 @@ public class report extends UpdateAt {
     @Column
     @Comment("유저 또는 게시물 Pk")
     private int reportTarget;
-
 }
