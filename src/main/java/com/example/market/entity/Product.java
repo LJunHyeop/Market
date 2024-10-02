@@ -4,9 +4,11 @@ import org.hibernate.annotations.* ;
 
 import jakarta.persistence.* ;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "product")
 public class Product extends UpdateAt {
@@ -15,9 +17,9 @@ public class Product extends UpdateAt {
     private long productPk ;
 
     @ManyToOne
-    @Column
+    @JoinColumn(name="user_pk", nullable = false)
     @Comment("유저 FK")
-    private User userPk ;
+    private User user ;
 
     @Column
     @Comment("상품 이름")

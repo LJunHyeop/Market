@@ -2,6 +2,7 @@ package com.example.market.interest.repository.entity;
 
 import com.example.market.entity.User;
 import jakarta.persistence.*;
+import com.example.market.entity.*;
 
 
 @Entity
@@ -13,15 +14,16 @@ import jakarta.persistence.*;
         }
 )
 public class Interest {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long InterestPk;
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long InterestPk;
 
-    @ManyToOne
-    @JoinColumn(name="user_pk", nullable = false)
-    private User user;
-//    @ManyToOne
-//    @JoinColumn(name="product_pk", nullable = false)
-//    private Product product;
+        @ManyToOne
+        @JoinColumn(name="user_pk", nullable = false)
+        private User user;
+
+        @ManyToOne
+        @JoinColumn(name="product_pk", nullable = false)
+        private Product product;
 
 }

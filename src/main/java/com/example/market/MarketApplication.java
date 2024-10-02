@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 public class MarketApplication {
 
     public static void main(String[] args) {
+        System.out.println("DEFAULT_DB_URL: " + System.getenv("DEFAULT_DB_URL"));
         SpringApplication.run(MarketApplication.class, args);
     }
 

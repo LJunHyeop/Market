@@ -1,4 +1,4 @@
-package com.example.product ;
+package com.example.market.product ;
 
 import org.springframework.stereotype.Service;
 
