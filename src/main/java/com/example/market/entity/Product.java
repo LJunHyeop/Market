@@ -16,7 +16,7 @@ public class Product extends UpdateAt {
 
     @ManyToOne
     @JoinColumn
-    @Comment("유저 FK")
+    @Comment("유저 PK")
     private User userPk ;
 
     @Column
