@@ -19,9 +19,9 @@ public class InterestContorller {
         // User user=userRepository.getReperenceById();
     }
 
-    @GetMapping
-    public List<InterestRes> getMyInterestList(Long userPk){
-        return service.getMyInterestList(userPk);
-    }
+//    @GetMapping
+//    public List<InterestRes> getMyInterestList(Long userPk){
+//        return service.getMyInterestList(userPk);
+//    }
 
 }
