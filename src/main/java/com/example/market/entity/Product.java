@@ -15,7 +15,7 @@ public class Product extends UpdateAt {
     private long productPk ;
 
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(name = "user_pk")
     @Comment("유저 PK")
     private User userPk ;
 
