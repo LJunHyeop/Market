@@ -20,8 +20,8 @@ public class Interest {
     @ManyToOne
     @JoinColumn(name="user_pk", nullable = false)
     private User user;
-//    @ManyToOne
-//    @JoinColumn(name="product_pk", nullable = false)
-//    private Product product;
+    @ManyToOne
+    @JoinColumn(name="product_pk", nullable = false)
+    private Product product;
 
 }
