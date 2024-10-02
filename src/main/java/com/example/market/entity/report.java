@@ -12,7 +12,7 @@ public class report extends UpdateAt {
     @Comment("신고 Pk")
     private int reportPk;
 
-    @JoinColumn
+    @JoinColumn(name = "user_pk")
     @ManyToOne
     @Comment("신고한 유저")
     private User userPk;
