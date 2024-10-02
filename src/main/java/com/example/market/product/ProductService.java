@@ -1,6 +1,5 @@
 package com.example.market.product ;
 
-import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.stereotype.Service;
 
 import com.example.market.entity.Product;
@@ -22,7 +21,7 @@ public class ProductService {
     private final ProductPhotoRepository photoRepository ;
     // private final UserRepository userRepository ;
 
-    // ÏÉÅÌíà Îì±Î°ù
+    // ªÛ«∞ µÓ∑œ
     public int postProduct(String token, PostProductRegistrationReq p){
         // Authentication auth = jwtTokenProvider.getAuthentication(token) ;
 
