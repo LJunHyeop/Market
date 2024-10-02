@@ -12,22 +12,21 @@ public class ChatRoom extends UpdateAt{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int chatRoomId;
 
-    @JoinColumn
+    @JoinColumn(name = "produc_pk")
     @ManyToOne
     @Comment("상품 Pk")
-    private Product ProductPk;
+    private Product productPk;
 
-    @JoinColumn
+    @JoinColumn(name = "user_pk1")
     @ManyToOne(fetch = FetchType.LAZY)
     @Comment("채팅유저 1")
-    private User userPk;
-
-    @JoinColumn
-    @ManyToOne(fetch = FetchType.LAZY)
-    @Comment("채팅유저 2")
     private User userPk1;
 
-    @JoinColumn
+    @JoinColumn(name = "user_pk2")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @Comment("채팅유저 2")
+    private User userPk2;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true,mappedBy = "chatRoomPk")
     @Comment("메세지 조회")
     private List<ChatMessage> chatMessage;

@@ -16,7 +16,6 @@ public class Product extends UpdateAt {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private long productPk ;
 
-    @ManyToOne
     @JoinColumn(name="user_pk", nullable = false)
     @Comment("유저 FK")
     private User user ;
