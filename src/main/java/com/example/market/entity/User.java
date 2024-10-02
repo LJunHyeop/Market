@@ -3,17 +3,19 @@ package com.example.market.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "user") // 백틱으로 감싸기
 @Getter
 @Setter
-@Entity
-@Table(name = "user")
-public class User extends UpdateAt{
+@NoArgsConstructor
+public class User extends UpdateAt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userPk;
@@ -24,15 +26,15 @@ public class User extends UpdateAt{
 
     @Column
     @Comment("유저 or 관리자")
-    private int userType;
+    private Integer userType;
 
-    @Column
+    @Column(nullable = false)
     @Comment("소셜 로그인")
     private Integer userSocial;
 
     @Column
-    @Comment("유저 매너 온도 ")
-    private int userManner;
+    @Comment("유저 매너 온도")
+    private Integer userManner;
 
     @Column
     @Comment("유저 프로필 사진")
@@ -40,7 +42,7 @@ public class User extends UpdateAt{
 
     @Column
     @Comment("활성 or 벤")
-    private int userState;
+    private Integer userState;
 
     @Column
     @Comment("핸드폰 넘버")

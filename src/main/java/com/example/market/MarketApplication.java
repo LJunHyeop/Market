@@ -7,12 +7,11 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
 @ConfigurationPropertiesScan
-@EnableJpaAuditing // auditing 기능 활성화
+@EnableJpaAuditing // auditing ??? ????
 public class MarketApplication {
 
     public static void main(String[] args) {
-        
-        System.out.println("DEFAULT_DB_URL: " + System.getenv("DEFAULT_DB_URL"));
+
         SpringApplication.run(MarketApplication.class, args);
     }
 
