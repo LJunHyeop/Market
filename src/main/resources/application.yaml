@@ -8,12 +8,12 @@ spring:
   application:
     name: Market
   config:
-    import: optional:file:env/dev-db.env[.properties]
+    import: optional:ofile:env/dev-db.env[.properties]
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: ${DEFAULT_DB_URL}
-    username: ${DEFAULT_DB_USERNAME}
-    password: ${DEFAULT_DB_PASSWORD}
+    url: jdbc:mariadb://gybproject.com:3306/market
+    username: market
+    password: green1234
   jpa:
     hibernate:
       ddl-auto: update
@@ -45,7 +45,7 @@ springdoc:
     version: openapi_3_1
 
 file:
-  directory: ${DEFAULT_FILE_DIRECTORY}
+  directory: D:\\2024-01\\download\\greengram2024_security\\
 
 ---
 spring:
@@ -53,15 +53,15 @@ spring:
     activate:
       on-profile: prod
   datasource:
-    url: ${PROD_DB_URL}
-    username: ${PROD_DB_USERNAME}
-    password: ${PROD_DB_PASSWORD}
+    url: jdbc:log4jdbc:mariadb://gybproject.com/market
+    username: market
+    password: green1234
     driver-class-name: org.mariadb.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: none
   file:
-    directory: ${PROD_FILE_DIRECTORY}
+    directory: /root/jumuniyo/media
 
   #  security:
 #    oauth2:
