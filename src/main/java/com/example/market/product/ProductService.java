@@ -1,4 +1,4 @@
-package com.example.product ;
+package com.example.market.product ;
 
 import org.springframework.stereotype.Service;
 
@@ -9,5 +9,5 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class ProductService {
-
+    
 }
