@@ -41,4 +41,8 @@ public class User extends UpdateAt{
     @Column
     @Comment("핸드폰 넘버")
     private String userPhone;
+
+    @Column
+    @Comment("권한")
+    private String userRole;
 }

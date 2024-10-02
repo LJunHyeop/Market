@@ -1,5 +1,4 @@
 HELP.md
-.env
 logs/
 .gradle
 build/
@@ -7,7 +6,6 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 src/main/resources/application.yaml
-
 ### STS ###
 .apt_generated
 .classpath

@@ -4,7 +4,6 @@ logging:
       springframework:
         security: debug
 
-
 spring:
   application:
     name: Market
@@ -13,14 +12,11 @@ spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://gybproject.com:3306/market
-    #${DEFAULT_DB_URL}
     username: market
-    #${DEFAULT_DB_USERNAME}
     password: green1234
-    #${DEFAULT_DB_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate.dialect: org.hibernate.dialect.MySQLDialect
@@ -50,7 +46,6 @@ springdoc:
 
 file:
   directory: D:\\2024-01\\download\\greengram2024_security\\
-  #${DEFAULT_FILE_DIRECTORY}
 
 ---
 spring:
@@ -59,18 +54,14 @@ spring:
       on-profile: prod
   datasource:
     url: jdbc:log4jdbc:mariadb://gybproject.com/market
-    #${PROD_DB_URL}
     username: market
-    #${PROD_DB_USERNAME}
     password: green1234
-    #${PROD_DB_PASSWORD}
     driver-class-name: org.mariadb.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: none
   file:
     directory: /root/jumuniyo/media
-    #${PROD_FILE_DIRECTORY}
 
   #  security:
 #    oauth2:

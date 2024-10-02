@@ -1,4 +1,4 @@
-package com.example.market.interest.repository.entity;
+package com.example.market.entity;
 
 import com.example.market.entity.User;
 import jakarta.persistence.*;
