@@ -3,9 +3,11 @@ package com.example.market.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import org.hibernate.annotations.Comment;
 
 @Entity
+@Table(name = "manner")
 public class Manner {
     @Id
     private Long mannerId;

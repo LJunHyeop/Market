@@ -11,7 +11,7 @@ public class Location  extends  UpdateAt{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int locationPk;
 
-    @JoinColumn
+    @JoinColumn(name = "user_pk")
     @Comment("유저 Pk")
     @ManyToOne
     private User userPk;
