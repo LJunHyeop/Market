@@ -16,7 +16,7 @@ public class InterestContorller {
     public void postInterest(@RequestParam Long productPk){
         if(productPk==null){ throw new RuntimeException();}
 
-        User user=userRepository.getReperenceById();
+      //  User user=userRepository.getReperenceById();
     }
 
 }

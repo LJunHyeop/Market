@@ -6,7 +6,7 @@ import jakarta.persistence.* ;
 import jakarta.persistence.Table;
 import lombok.Data;
 
-@Data
+
 @Entity
 @Table(name = "product")
 public class Product extends UpdateAt {
@@ -15,7 +15,7 @@ public class Product extends UpdateAt {
     private long productPk ;
 
     @ManyToOne
-    @Column
+    @JoinColumn
     @Comment("유저 FK")
     private User userPk ;
 
