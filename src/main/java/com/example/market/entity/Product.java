@@ -24,23 +24,23 @@ public class Product extends UpdateAt {
     private long productPk ;
 
     @JoinColumn(name="user_pk", nullable = false)
-    @Comment("À¯Àú FK")
+    @Comment("ìœ ì € FK")
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
     @Column
-    @Comment("»óÇ° ÀÌ¸§")
+    @Comment("ìƒí’ˆ ì´ë¦„")
     private String productName ;
 
     @Column
-    @Comment("»óÇ° °¡°İ")
+    @Comment("ìƒí’ˆ ê°€ê²©")
     private int productPrice ;
 
     @Column
-    @Comment("ÁÁ¾Æ¿ä")
+    @Comment("ì¢‹ì•„ìš”")
     private int productLike ;
 
     @Column
-    @Comment("»óÇ° °Ô½Ã±Û")
+    @Comment("ìƒí’ˆ ê²Œì‹œê¸€")
     private String productComment ;
 }
