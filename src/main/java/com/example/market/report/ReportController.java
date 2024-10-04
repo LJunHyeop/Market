@@ -23,12 +23,12 @@ public class ReportController {
         return  service.postReport(p);
     }
     //신고 전체리스트 조회 컨트롤러
-    @GetMapping("/Get/List")
-    public List<GetReportReq> getReportList(@RequestParam GetReportRes p){
-        return  service.GetReportList(p);
-    }
+   @GetMapping("/Get/List")
+  public List<GetReportReq> getReportList(@RequestParam GetReportRes p){
+      return  service.GetReportList(p);
+   }
     @GetMapping("/Get/User")
-    public List<GetReportReq> getReportUser(@RequestParam GetReportRes p){
+   public List<GetReportReq> getReportUser(@RequestParam GetReportRes p){
         return service.GetReport(p);
     }
 }

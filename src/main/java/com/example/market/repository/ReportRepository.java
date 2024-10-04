@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ReportRepository extends JpaRepository<Report, Long> {
-    List<GetReportReq> findReportByUserPk(User user);
+   List<GetReportReq> findReportByUserPk(User user);
 
-    List<GetReportReq>findAllBy(Report report);
+    List<GetReportReq>findAllByReportPk(Report report);
 }

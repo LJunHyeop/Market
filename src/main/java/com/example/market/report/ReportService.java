@@ -35,7 +35,8 @@ public class ReportService {
         return 1;
     }
     // 특정 유저 신고 조회 신고조회 실패시 조회 없음
-    public List<GetReportReq> GetReport(GetReportRes p) {
+
+     public List<GetReportReq> GetReport(GetReportRes p) {
         Report report = new Report();
         try{
             report.setUserPk(p.getUserPk());
@@ -45,15 +46,17 @@ public class ReportService {
         }
         return repository.findReportByUserPk(report.getUserPk());
     }
+
+
     // 전체 신고 조회 성공시 1 실패시 신고 조회 실패 리턴
     public List<GetReportReq> GetReportList(GetReportRes p) {
         Report report = new Report();
         try{
-            repository.findAllBy(report);
+            repository.findAllByReportPk(report);
         }catch (Exception e) {
             System.out.println("신고 조회 실패");
         }
-        return repository.findAllBy(report);
+        return repository.findAllByReportPk(report);
     }
 }
 
