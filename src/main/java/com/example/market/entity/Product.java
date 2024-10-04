@@ -1,5 +1,6 @@
 package com.example.market.entity;
 
+import jakarta.persistence.*;
 import org.hibernate.annotations.Comment ;
 
 import jakarta.persistence.Column ;
@@ -23,8 +24,10 @@ public class Product extends UpdateAt {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private long productPk ;
 
-    @JoinColumn(name="user_pk", nullable = false)
-    @Comment("유저 FK")
+
+    @JoinColumn(name = "user_pk", nullable = false)
+    @Comment("유저 PK")
+
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
