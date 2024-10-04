@@ -1,11 +1,15 @@
 package com.example.market.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Comment;
 
 @Entity
 @Table(name = "report")
-public class report extends UpdateAt {
+@Getter
+@Setter
+public class Report extends UpdateAt {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

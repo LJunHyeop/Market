@@ -13,6 +13,12 @@ repositories {
 }
 
 dependencies {
+
+    implementation("org.infinispan:infinispan-core:12.0.1.Final")
+    implementation("org.infinispan:infinispan-commons:12.0.1.Final")
+    implementation("org.infinispan:infinispan-marshaller-protostuff:12.0.1.Final")
+    implementation("org.jboss.marshalling:jboss-marshalling-osgi:2.0.10.Final")
+
     implementation 'org.mariadb.jdbc:mariadb-java-client' // MariaDB JDBC 드라이버
     implementation "me.paulschwarz:spring-dotenv:3.0.0"
     
