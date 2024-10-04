@@ -21,7 +21,7 @@ public class ProductService {
     private final ProductPhotoRepository photoRepository ;
     // private final UserRepository userRepository ;
 
-    // »óÇ° µî·Ï
+    // ï¿½ï¿½Ç° ï¿½ï¿½ï¿½
     public int postProduct(String token, PostProductRegistrationReq p){
         // Authentication auth = jwtTokenProvider.getAuthentication(token) ;
 
