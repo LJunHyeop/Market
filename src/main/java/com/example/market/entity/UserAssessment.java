@@ -11,7 +11,7 @@ import org.hibernate.annotations.Comment;
 @Table( // 복합 유니크
         uniqueConstraints={
                 @UniqueConstraint(
-                        columnNames={"user_id", "manner_id"}
+                        columnNames={"user_pk", "manner_id"}
                 )
         }
 )
@@ -20,7 +20,8 @@ public class UserAssessment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long UserAssPk;
 
-    @JoinColumn(name="user_id", nullable = false)
+//    그 테이블의 컬럼명과 일치 해야 함
+    @JoinColumn(name="user_pk", nullable = false)
     @ManyToOne
     @Comment("유저 PK")
     private User user;
@@ -30,7 +31,7 @@ public class UserAssessment {
     @Comment("평가 항목 PK")
     private Manner manner;
 
-    @Column
+    @Column(name="count", nullable = false)
     @Comment("횟수")
-    private Long count;
+    private Integer count;
 }

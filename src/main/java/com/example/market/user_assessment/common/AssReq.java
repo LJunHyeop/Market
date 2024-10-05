@@ -11,6 +11,6 @@ import java.util.List;
 public class AssReq {
     // 어떤 사용자에게
     private Long UserPk;
-    // 어떤 평가를
+    // 어떤 평가들을
     private List<Long> replyList;
 }
