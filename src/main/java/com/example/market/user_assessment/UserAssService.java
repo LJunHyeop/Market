@@ -55,4 +55,21 @@ public class UserAssService {
         }
         return answer;
     }
+
+    public int getMannerScore(){
+        Long userPk=0L;
+//        userRepository.getReferenceById(userPk);
+        List<UserAssessment> myAss=userAssessmentRepository.findByUser_userPk(userPk);
+        int positive=0;
+        int negative=0;
+        for(UserAssessment entity:myAss){
+            int mannerType=entity.getManner().getType();
+            if(mannerType==1){
+                positive+=entity.getCount();
+            }
+            negative+=entity.getCount();
+        }
+        int result=positive+(negative*-1);
+        return result;
+    }
 }
