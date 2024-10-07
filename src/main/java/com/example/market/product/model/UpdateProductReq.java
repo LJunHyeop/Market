@@ -1,12 +1,10 @@
 package com.example.market.product.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
-import lombok.Data;
-
-@Data
-public class PostProductRegistrationReq {
-    @JsonIgnore
+@Getter
+@Setter
+public class UpdateProductReq {
     private long productPk ;
     private long userPk ;
     private int productLike ;
