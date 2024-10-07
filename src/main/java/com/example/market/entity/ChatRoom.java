@@ -1,16 +1,20 @@
 package com.example.market.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Comment;
 
 import java.util.List;
 
 @Table(name = "chat_room")
 @Entity
+@Getter
+@Setter
 public class ChatRoom extends UpdateAt{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int chatRoomId;
+    private long chatRoomId;
 
     @JoinColumn(name = "produc_pk")
     @ManyToOne
@@ -30,5 +34,9 @@ public class ChatRoom extends UpdateAt{
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true,mappedBy = "chatRoomPk")
     @Comment("메세지 조회")
     private List<ChatMessage> chatMessage;
+
+    @Column
+    @Comment("방나가기")
+    private int state; // 1: 활성, 2: 비활성
 
 }
