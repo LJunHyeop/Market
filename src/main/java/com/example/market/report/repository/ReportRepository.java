@@ -1,4 +1,4 @@
-package com.example.market.repository;
+package com.example.market.report.repository;
 
 import com.example.market.entity.Report;
 import com.example.market.entity.User;

@@ -5,7 +5,7 @@ import com.example.market.entity.Report;
 import com.example.market.report.model.GetReportReq;
 import com.example.market.report.model.GetReportRes;
 import com.example.market.report.model.PostReport;
-import com.example.market.repository.ReportRepository;
+import com.example.market.report.repository.ReportRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
