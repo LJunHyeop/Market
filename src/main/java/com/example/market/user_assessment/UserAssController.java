@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/assessment")
+@RequestMapping("/api/assessment")
 @RequiredArgsConstructor
 @Tag(name="평가", description="평가 관련")
 public class UserAssController {

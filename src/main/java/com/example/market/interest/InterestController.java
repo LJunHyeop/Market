@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/interest")
+@RequestMapping("/api/interest")
 @RequiredArgsConstructor
 @Tag(name="관심상품", description="관심상품 확인")
 public class InterestController {
