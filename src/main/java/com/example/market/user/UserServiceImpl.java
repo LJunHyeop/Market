@@ -6,11 +6,13 @@ import com.example.market.user.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
+
 
     @Override//회원가입
     public ResponseEntity<? super SignUpResponseDto> signUpUser(SignUpRequestDto dto) {
