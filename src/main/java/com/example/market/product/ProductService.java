@@ -28,9 +28,12 @@ public class ProductService {
     private final CustomFileUtils customFileUtils ;
     // private final UserRepository userRepository ;
 
+
     // 상품 등록
     @Transactional
     public int postProduct(String token, PostProductRegistrationReq p, List<MultipartFile> pics){
+
+
         // Authentication auth = jwtTokenProvider.getAuthentication(token) ;
 
         Product product = new Product() ;

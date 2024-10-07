@@ -10,24 +10,18 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table( // 복합 유니크
-        uniqueConstraints={
-                @UniqueConstraint(
-                        columnNames={"user_pk", "product_pk"}
-                )
-        }
-)
+@Table(name="interest")
 public class Interest {
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long InterestPk;
+        @EmbeddedId
+        private InterestIds interestIds;
 
         @ManyToOne
-        @JoinColumn(name="user_pk", nullable = false)
+        @MapsId("userPk")
+        @JoinColumn(name="user_pk")
         private User user;
 
         @ManyToOne
-        @JoinColumn(name="product_pk", nullable = false)
+        @MapsId("productPk")
+        @JoinColumn(name="product_pk")
         private Product product;
-
 }
