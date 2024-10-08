@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/manner")
+@RequestMapping("/api/manner")
 @Tag(name="매너", description="매너 평가 항목")
 public class MannerController {
     private final MannerService service;
