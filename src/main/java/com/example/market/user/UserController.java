@@ -2,6 +2,8 @@ package com.example.market.user;
 
 import com.example.market.user.request.*;
 import com.example.market.user.response.*;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -16,12 +18,13 @@ public class UserController {
 
     @PostMapping("/sign-up")//회원가입
     public ResponseEntity<? super SignUpResponseDto> signUpUser(@RequestBody SignUpRequestDto dto) {
+        userservice.signUpUser(dto);
         return userservice.signUpUser(dto);
     }
 
     @PostMapping("/sign-in")//유저로그인
-    public ResponseEntity<? super SignInResponseDto> signInUser(@RequestBody SignInRequestDto dto) {
-        return userservice.signInUser(dto);
+    public ResponseEntity<? super SignInResponseDto> signInUser(HttpServletResponse res, @RequestBody @Valid SignInRequestDto dto) {
+        return userservice.signInUser(res, dto);
     }
 
     @PostMapping("/social-in")//소셜로그인
