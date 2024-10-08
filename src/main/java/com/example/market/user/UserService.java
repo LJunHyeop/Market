@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 
 public interface UserService {
     //회원가입
-    ResponseEntity<?super SignUpResponseDto> signUpUser(SignUpRequestDto dto);
+    ResponseEntity<? super SignUpResponseDto> signUpUser(SignUpRequestDto dto);
     //유저로그인
     ResponseEntity<?super SignInResponseDto> signInUser(SignInRequestDto dto);
     //소셜로그인

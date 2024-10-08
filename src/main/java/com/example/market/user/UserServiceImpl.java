@@ -1,28 +1,51 @@
 package com.example.market.user;
 
+import com.example.market.entity.User;
 import com.example.market.user.repository.UserRepository;
 import com.example.market.user.request.*;
 import com.example.market.user.response.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
     @Override//회원가입
     public ResponseEntity<? super SignUpResponseDto> signUpUser(SignUpRequestDto dto) {
-        dto.setUserName(dto.getUserName());
-        dto.setUserPw(dto.getUserPw());
-        dto.setUserPhone(dto.getUserPhone());
+        String username = dto.getUserName();
+        String userPw = dto.getUserPw();
+        String userPhone = dto.getUserPhone();
+
+        boolean isExist = userRepository.existsByUserName(username);
+
+        if (isExist){
+
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(SignUpResponseDto.failure("이미 존재하는 사용자입니다."));
+        }
+
+        User user  = new User();
+
+        user.setUserName(username);
+        user.setUserPw(bCryptPasswordEncoder.encode(userPw));
+        user.setUserPhone(userPhone);
+
+        User saverUser = userRepository.save(user);
 
 
-
-        return null;
+        return SignUpResponseDto.success(saverUser.getUserPk());
     }
 
     //유저로그인
