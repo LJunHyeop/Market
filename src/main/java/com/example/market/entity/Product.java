@@ -27,7 +27,6 @@ public class Product extends UpdateAt {
 
     @JoinColumn(name = "user_pk", nullable = false)
     @Comment("유저 PK")
-
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
