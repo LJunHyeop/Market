@@ -22,7 +22,11 @@ public class User extends UpdateAt {
 
     @Column
     @Comment("유저 비밀번호")
-    private int userPw;
+    private String userPw;
+
+    @Column
+    @Comment("유저 이메일")
+    private String userEmail;
 
     @Column
     @Comment("유저 or 관리자")
