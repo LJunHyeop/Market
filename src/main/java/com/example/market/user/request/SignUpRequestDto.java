@@ -9,5 +9,6 @@ public class SignUpRequestDto {
     private String userName;
     private String userPhone;
     private String userPw;
+    private String userEmail;
 
 }

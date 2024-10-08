@@ -19,6 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import static com.example.market.common.Role.ROLE_USER;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
@@ -33,11 +35,11 @@ public class UserServiceImpl implements UserService{
     @Override//회원가입
     public ResponseEntity<? super SignUpResponseDto> signUpUser(SignUpRequestDto dto) {
 
-        String username = dto.getUserName();
+        String userEmail = dto.getUserEmail();
         String userPw = dto.getUserPw();
         String userPhone = dto.getUserPhone();
 
-        boolean isExist = userRepository.existsByUserName(username);
+        boolean isExist = userRepository.existsByUserEmail(userEmail);
 
         if (isExist){
 
@@ -48,9 +50,17 @@ public class UserServiceImpl implements UserService{
 
         User user  = new User();
 
-        user.setUserName(username);
+        user.setUserEmail(userEmail);
         user.setUserPw(bCryptPasswordEncoder.encode(userPw));
         user.setUserPhone(userPhone);
+        user.setUserName(dto.getUserName());
+        user.setUserType(1);
+        user.setUserManner(36.5);
+        user.setUserState(1);
+        user.setUserSocial(1);
+        user.setUserRole(1);
+
+
 
         User saverUser = userRepository.save(user);
 
