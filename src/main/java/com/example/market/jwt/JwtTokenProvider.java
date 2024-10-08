@@ -110,15 +110,36 @@ public class JwtTokenProvider {
 
     public String resolveToken(HttpServletRequest req) {
 
-        String jwt = req.getHeader(appProperties.getJwt().getHeaderSchemaName());
-        if (jwt == null) { return null; }
-
-        if(!jwt.startsWith(appProperties.getJwt().getTokenType())) {
+        // appProperties가 null이 아닌지 체크
+        if (appProperties == null || appProperties.getJwt() == null) {
+            // 로깅 또는 예외 처리를 고려
             return null;
         }
 
-        return jwt.substring(appProperties.getJwt().getTokenType().length()).trim();
+        // 헤더 스키마 이름과 토큰 타입이 null인지 체크
+        String headerSchemaName = appProperties.getJwt().getHeaderSchemaName();
+        String tokenType = appProperties.getJwt().getTokenType();
 
+        if (headerSchemaName == null || tokenType == null) {
+            // 로깅 또는 예외 처리
+            return null;
+        }
+
+        // 요청 헤더에서 JWT 토큰 추출
+        String jwt = req.getHeader(headerSchemaName);
+
+        // JWT가 null이거나 빈 값인지 체크
+        if (jwt == null || jwt.isEmpty()) {
+            return null;
+        }
+
+        // JWT가 올바른 토큰 타입으로 시작하는지 체크
+        if (!jwt.startsWith(tokenType)) {
+            return null;
+        }
+
+        // 토큰 타입을 제거하고 남은 부분을 반환
+        return jwt.substring(tokenType.length()).trim();
     }
 
 }

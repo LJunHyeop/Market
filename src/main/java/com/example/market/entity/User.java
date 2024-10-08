@@ -25,6 +25,10 @@ public class User extends UpdateAt {
     private String userPw;
 
     @Column
+    @Comment("유저 이메일")
+    private String userEmail;
+
+    @Column
     @Comment("유저 or 관리자")
     private Integer userType;
 
