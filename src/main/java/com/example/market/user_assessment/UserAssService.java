@@ -43,8 +43,9 @@ public class UserAssService {
     }
     public List<AssRes> getMyManner(){
         Long userPk=0L;
-//        userRepository.getReferenceById(userPk);
-        List<UserAssessment> myAss=userAssessmentRepository.findByUser_userPk(userPk);
+//                authenticationFacade.getLoginUserId();
+        User user=userRepository.getReferenceById(userPk);
+        List<UserAssessment> myAss=userAssessmentRepository.findByUser(user);
         List<AssRes> answer=new ArrayList<>();
         for(UserAssessment entity:myAss){
             AssRes res=new AssRes();
@@ -58,8 +59,9 @@ public class UserAssService {
 
     public int getMannerScore(){
         Long userPk=0L;
-//        userRepository.getReferenceById(userPk);
-        List<UserAssessment> myAss=userAssessmentRepository.findByUser_userPk(userPk);
+//                authenticationFacade.getLoginUserId();
+        User user=userRepository.getReferenceById(userPk);
+        List<UserAssessment> myAss=userAssessmentRepository.findByUser(user);
         int positive=0;
         int negative=0;
         for(UserAssessment entity:myAss){
