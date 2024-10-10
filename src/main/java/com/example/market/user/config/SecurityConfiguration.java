@@ -38,6 +38,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/admin/**").hasRole("ADMIN") // /api/admin/** 경로는 ADMIN 권한 필요
                         .anyRequest().permitAll() // 그 외 모든 요청은 허용
                 )
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(new JwtAuthenticationEntryPoint()) // 인증 실패 처리
                         .accessDeniedHandler(new JwtAuthenticationAccessDeniedHandler()) // 접근 거부 처리
