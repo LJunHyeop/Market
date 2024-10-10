@@ -30,8 +30,6 @@ public class InterestController {
 
 //    @PutMapping 있다 vs 없다
 
-//    상품 PK로(상품 페이지에서 눌렀다가 취소)
-//    관심상품 PK번호로(목록 조회에서 삭제)
     @DeleteMapping("/deletion")
     @Operation(summary = "관심 상품 제거")
     public void deleteInterest(@RequestParam Long productPk){
