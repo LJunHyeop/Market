@@ -5,6 +5,7 @@ import com.example.market.entity.User;
 import com.example.market.user.repository.UserRepository;
 import com.example.market.chat.model.ChatMsgDto; // DTO 추가
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/chat")
 @RequiredArgsConstructor
+@Tag(name = "채팅방 생성 및 조회 및 나가기 ")
 public class ChatController {
 
     private final ChatService chatService;
@@ -42,6 +44,7 @@ public class ChatController {
     @GetMapping("/rooms")
     @Operation(summary = "특정 유저 전체 채팅방 조회")
     public ResponseEntity<List<ChatRoom>> getChatRooms(@RequestParam Long userId) {
+        // 유저 다짜여지면 기본으로 로그인한 유저로 조회
         List<ChatRoom> chatRooms = chatService.getChatRoomsByUserId(userId);
         return ResponseEntity.ok(chatRooms);
     }
