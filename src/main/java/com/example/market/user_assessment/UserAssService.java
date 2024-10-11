@@ -3,6 +3,7 @@ package com.example.market.user_assessment;
 import com.example.market.entity.User;
 import com.example.market.entity.UserAssessment;
 import com.example.market.manner.repository.MannerRepository;
+import com.example.market.security.AuthenticationFacade;
 import com.example.market.user.repository.UserRepository;
 import com.example.market.user_assessment.common.AssReq;
 import com.example.market.user_assessment.common.AssRes;
@@ -16,9 +17,10 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UserAssService {
-    private UserAssessmentRepository userAssessmentRepository;
-    private MannerRepository mannerRepository;
-    private UserRepository userRepository;
+    private final UserAssessmentRepository userAssessmentRepository;
+    private final MannerRepository mannerRepository;
+    private final UserRepository userRepository;
+    private final AuthenticationFacade authenticationFacade;
 
     public void assUserManner(AssReq assReq){
         Long userPk=assReq.getUserPk();
@@ -42,8 +44,7 @@ public class UserAssService {
         }
     }
     public List<AssRes> getMyManner(){
-        Long userPk=0L;
-//                authenticationFacade.getLoginUserId();
+        Long userPk=authenticationFacade.getLoginUserId();
         User user=userRepository.getReferenceById(userPk);
         List<UserAssessment> myAss=userAssessmentRepository.findByUser(user);
         List<AssRes> answer=new ArrayList<>();
@@ -58,8 +59,7 @@ public class UserAssService {
     }
 
     public int getMannerScore(){
-        Long userPk=0L;
-//                authenticationFacade.getLoginUserId();
+        Long userPk=authenticationFacade.getLoginUserId();
         User user=userRepository.getReferenceById(userPk);
         List<UserAssessment> myAss=userAssessmentRepository.findByUser(user);
         int positive=0;

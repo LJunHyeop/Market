@@ -42,6 +42,7 @@ public class ChatService {
 
     // 특정 유저의 모든 채팅방 조회 (상태가 1인 것만)
     public List<ChatRoom> getChatRoomsByUserId(Long userId) {
+        //유저 완성시 로그인한 유저로 변경 예정
         User user = userRepository.findById(userId).orElse(null);
         if (user == null) {
             return Collections.emptyList(); // 유저가 존재하지 않으면 빈 리스트 반환
@@ -56,7 +57,7 @@ public class ChatService {
     public ChatRoom getChatRoomBetweenUsers(Long userId1, Long userId2) {
         User user1 = userRepository.findById(userId1).orElse(null);
         User user2 = userRepository.findById(userId2).orElse(null);
-
+        //유저 완성시 로그인한 유저로 변경 예정
         if (user1 == null || user2 == null) {
             return null; // 유저가 존재하지 않으면 null 반환
         }
