@@ -1,5 +1,6 @@
 package com.example.market.entity;
 
+import com.example.market.common.Role;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,7 +39,7 @@ public class User extends UpdateAt {
 
     @Column
     @Comment("유저 매너 온도")
-    private Integer userManner;
+    private double userManner;
 
     @Column
     @Comment("유저 프로필 사진")
@@ -54,5 +55,5 @@ public class User extends UpdateAt {
 
     @Column
     @Comment("권한")
-    private String userRole;
+    private Integer userRole;
 }
