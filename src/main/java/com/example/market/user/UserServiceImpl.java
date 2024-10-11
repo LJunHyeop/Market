@@ -13,7 +13,6 @@ import com.example.market.user.request.*;
 import com.example.market.user.response.*;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -117,39 +116,39 @@ public class UserServiceImpl implements UserService{
         return SignInResponseDto.success(accessToken);
     }
 
-    //소셜로그인
-    @Override
-    public ResponseEntity<? super SocialResponseDto> socialIn(SocialRequestDto dto) {
-        return null;
-    }
-
-    //아이디 및 비번 찾기
-    @Override
-    public ResponseEntity<? super FindResponseDto> findId(FindRequestDto dto) {
-        return null;
-    }
-
-    //메일 인증
-    @Override
-    public ResponseEntity<? super MailResponseDto> findMail(MailRequestDto dto) {
-        return null;
-    }
-
-    //마이페이지
-    @Override
-    public ResponseEntity<? super InfoResponseDto> infoPage(InfoRequestDto dto) {
-        return null;
-    }
-
-    //마이페이지 수정
-    @Override
-    public ResponseEntity<? super InfoUpdateResponseDto> infoUpdate(InfoUpdateRequestDto dto) {
-        return null;
-    }
-
-    //로그아웃
-    @Override
-    public ResponseEntity<? super LogoutResponseDto> logout(LogoutRequestDto dto) {
-        return null;
-    }
+//    //소셜로그인
+//    @Override
+//    public ResponseEntity<? super SocialResponseDto> socialIn(SocialRequestDto dto) {
+//        return null;
+//    }
+//
+//    //아이디 및 비번 찾기
+//    @Override
+//    public ResponseEntity<? super FindResponseDto> findId(FindRequestDto dto) {
+//        return null;
+//    }
+//
+//    //메일 인증
+//    @Override
+//    public ResponseEntity<? super MailResponseDto> findMail(MailRequestDto dto) {
+//        return null;
+//    }
+//
+//    //마이페이지
+//    @Override
+//    public ResponseEntity<? super InfoResponseDto> infoPage(InfoRequestDto dto) {
+//        return null;
+//    }
+//
+//    //마이페이지 수정
+//    @Override
+//    public ResponseEntity<? super InfoUpdateResponseDto> infoUpdate(InfoUpdateRequestDto dto) {
+//        return null;
+//    }
+//
+//    //로그아웃
+//    @Override
+//    public ResponseEntity<? super LogoutResponseDto> logout(LogoutRequestDto dto) {
+//        return null;
+//    }
 }

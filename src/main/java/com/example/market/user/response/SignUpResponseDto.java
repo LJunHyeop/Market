@@ -24,7 +24,7 @@ public class SignUpResponseDto extends ResponseDto{
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    public static ResponseEntity<SignUpResponseDto> failure(String s) {
+    public static ResponseEntity<SignUpResponseDto> failure(String ss) {
         SignUpResponseDto result = new SignUpResponseDto(userPk);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
