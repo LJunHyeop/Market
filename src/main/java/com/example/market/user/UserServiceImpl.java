@@ -84,8 +84,8 @@ public class UserServiceImpl implements UserService{
             throw new CustomException(CommonErrorCode.VF);
         }
 
-        String username = dto.getUserEmail();
-        User user = userRepository.findByUserName(username);
+        String userEmail = dto.getUserEmail();
+        User user = userRepository.findByUserEmail(userEmail);
         if (user == null){
             throw new CustomException(CommonErrorCode.SF);
         }
@@ -96,7 +96,7 @@ public class UserServiceImpl implements UserService{
             throw new CustomException(CommonErrorCode.SF);
         }
         MyUser myUser = MyUser.builder()
-                .userId(user.getUserPk())
+                .userPk(user.getUserPk())
                 .role(user.getUserRole())
                 .build();
 
