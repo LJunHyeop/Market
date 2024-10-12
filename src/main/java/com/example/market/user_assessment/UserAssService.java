@@ -44,7 +44,7 @@ public class UserAssService {
         }
     }
     public List<AssRes> getMyManner(){
-        Long userPk=authenticationFacade.getLoginUserId();
+        Long userPk=authenticationFacade.getLoginUserPk();
         User user=userRepository.getReferenceById(userPk);
         List<UserAssessment> myAss=userAssessmentRepository.findByUser(user);
         List<AssRes> answer=new ArrayList<>();
@@ -59,7 +59,7 @@ public class UserAssService {
     }
 
     public int getMannerScore(){
-        Long userPk=authenticationFacade.getLoginUserId();
+        Long userPk=authenticationFacade.getLoginUserPk();
         User user=userRepository.getReferenceById(userPk);
         List<UserAssessment> myAss=userAssessmentRepository.findByUser(user);
         int positive=0;
