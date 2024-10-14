@@ -107,6 +107,7 @@ public class UserServiceImpl implements UserService{
             cookieUtils.deleteCookie(res, "refresh-token");
             cookieUtils.setCookie(res, "refresh-token", refreshToken, refreshTokenMaxAge);
         } catch (CustomException e) {
+            e.printStackTrace();
             throw new CustomException(e.getErrorCode());
         } catch (Exception e) {
             e.printStackTrace();
