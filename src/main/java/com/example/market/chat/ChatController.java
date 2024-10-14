@@ -2,8 +2,9 @@ package com.example.market.chat;
 
 import com.example.market.entity.ChatRoom;
 import com.example.market.entity.User;
-import com.example.market.user.repository.UserRepository;
+
 import com.example.market.chat.model.ChatMsgDto; // DTO 추가
+import com.example.market.user_assessment.repository.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

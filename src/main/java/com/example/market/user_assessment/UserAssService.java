@@ -3,10 +3,11 @@ package com.example.market.user_assessment;
 import com.example.market.entity.User;
 import com.example.market.entity.UserAssessment;
 import com.example.market.manner.repository.MannerRepository;
-import com.example.market.user.repository.UserRepository;
+
 import com.example.market.user_assessment.common.AssReq;
 import com.example.market.user_assessment.common.AssRes;
 import com.example.market.user_assessment.repository.UserAssessmentRepository;
+import com.example.market.user_assessment.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

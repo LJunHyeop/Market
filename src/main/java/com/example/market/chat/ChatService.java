@@ -6,7 +6,8 @@ import com.example.market.chat.model.ChatMsgDto;
 import com.example.market.entity.ChatRoom;
 import com.example.market.entity.ChatMessage;
 import com.example.market.entity.User;
-import com.example.market.user.repository.UserRepository;
+
+import com.example.market.user_assessment.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
