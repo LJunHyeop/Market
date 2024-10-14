@@ -1,5 +1,6 @@
 package com.example.market.entity;
 
+import com.example.market.common.Role;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,6 +22,14 @@ public class User extends UpdateAt {
     private String userName;
 
     @Column
+    @Comment("유저 비밀번호")
+    private String userPw;
+
+    @Column
+    @Comment("유저 이메일")
+    private String userEmail;
+
+    @Column
     @Comment("유저 or 관리자")
     private Integer userType;
 
@@ -30,7 +39,7 @@ public class User extends UpdateAt {
 
     @Column
     @Comment("유저 매너 온도")
-    private Integer userManner;
+    private double userManner;
 
     @Column
     @Comment("유저 프로필 사진")
@@ -46,5 +55,5 @@ public class User extends UpdateAt {
 
     @Column
     @Comment("권한")
-    private String userRole;
+    private Integer userRole;
 }

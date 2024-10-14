@@ -13,19 +13,20 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.mariadb.jdbc:mariadb-java-client' // MariaDB JDBC 드라이버
-    implementation "me.paulschwarz:spring-dotenv:3.0.0"
-    
-    implementation "me.paulschwarz:spring-dotenv:3.0.0"
+    // 기존 의존성들 유지
+    implementation("org.infinispan:infinispan-core:12.0.1.Final")
+    implementation("org.infinispan:infinispan-commons:12.0.1.Final")
+    implementation("org.infinispan:infinispan-marshaller-protostuff:12.0.1.Final")
+    implementation("org.jboss.marshalling:jboss-marshalling-osgi:2.0.10.Final")
 
+    implementation 'org.mariadb.jdbc:mariadb-java-client'
+    implementation "me.paulschwarz:spring-dotenv:3.0.0"
+    implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
-// https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-ui
-//    implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.8.0'
-// https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
-    implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.6.0'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
@@ -35,6 +36,11 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.3'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // JWT 라이브러리
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-gson:0.12.5'
 }
 
 tasks.named('test') {
