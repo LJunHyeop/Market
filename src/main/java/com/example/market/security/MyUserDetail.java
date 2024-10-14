@@ -34,7 +34,7 @@ MyUserDetail implements UserDetails {
 
     @Override
     public String getUsername() {
-        return myUser == null ? "GUEST" : String.valueOf(myUser.getUserId());
+        return myUser == null ? "GUEST" : String.valueOf(myUser.getUserPk());
     }
 
     @Override
@@ -56,5 +56,10 @@ MyUserDetail implements UserDetails {
     public boolean isEnabled() {
         return false;
     }
+
+//    @Override
+//    public String getName() {
+//        return null;
+//    }
 
 }

@@ -18,8 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import static com.example.market.common.Role.ROLE_USER;
-
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
@@ -84,8 +82,8 @@ public class UserServiceImpl implements UserService{
             throw new CustomException(CommonErrorCode.VF);
         }
 
-        String username = dto.getUserEmail();
-        User user = userRepository.findByUserName(username);
+        String userEmail = dto.getUserEmail();
+        User user = userRepository.findByUserEmail(userEmail);
         if (user == null){
             throw new CustomException(CommonErrorCode.SF);
         }
@@ -96,7 +94,7 @@ public class UserServiceImpl implements UserService{
             throw new CustomException(CommonErrorCode.SF);
         }
         MyUser myUser = MyUser.builder()
-                .userId(user.getUserPk())
+                .userPk(user.getUserPk())
                 .role(user.getUserRole())
                 .build();
 
@@ -134,11 +132,27 @@ public class UserServiceImpl implements UserService{
 //        return null;
 //    }
 //
-//    //마이페이지
-//    @Override
-//    public ResponseEntity<? super InfoResponseDto> infoPage(InfoRequestDto dto) {
-//        return null;
-//    }
+    //마이페이지
+    @Override
+    public ResponseEntity<? super InfoResponseDto> infoPage(InfoRequestDto dto) {
+
+        try {
+            dto.setUserPk(authenticationFacade.getLoginUserPk());
+            if (dto.getUserPk() <= 0) {
+                throw new RuntimeException();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new CustomException(CommonErrorCode.MNF);
+        }
+        User user = new User();
+        dto.setUserPk(user.getUserPk());
+        dto.setUserEmail(user.getUserEmail());
+        dto.setUserManner(user.getUserManner());
+        dto.setUserName(user.getUserName());
+        dto.setUserPhone(user.getUserPhone());
+        return InfoResponseDto.success(user.getUserPk(), user.getUserEmail(),user.getUserName(),user.getUserPhone(),user.getUserManner());
+    }
 //
 //    //마이페이지 수정
 //    @Override
