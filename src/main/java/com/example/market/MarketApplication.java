@@ -10,7 +10,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @SpringBootApplication
 @ConfigurationPropertiesScan
 @EnableJpaAuditing // auditing ??? ????
-@OpenAPIDefinition(info = @Info(title = "API 명", version = "v1"))
 public class MarketApplication {
 
     public static void main(String[] args) {
