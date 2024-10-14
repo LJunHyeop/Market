@@ -2,6 +2,7 @@ package com.example.market.product.repository;
 
 import java.util.List ;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Page;      // Page 클래스
 import org.springframework.data.domain.Pageable; // Pageable 클래스
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,4 +18,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
     Page<Product> findProductsByProduct(String p, Pageable pageable) ;
 
     long countByProductNameOrProductComment(String productName, String productComment);
+
+    @Query("SELECT p.user.userPk FROM Product p WHERE p.productPk = :productPk")
+    Long findUserPkByProductPk(@Param("productPk") Long productPk);
 }
