@@ -6,6 +6,7 @@ import com.example.market.entity.User;
 import com.example.market.jwt.JwtTokenProvider;
 import com.example.market.security.AuthenticationFacade;
 import com.example.market.security.MyUser;
+import com.example.market.user.object.InfoDto;
 import com.example.market.user.exception.CommonErrorCode;
 import com.example.market.user.exception.CustomException;
 import com.example.market.user.repository.UserRepository;
@@ -145,12 +146,16 @@ public class UserServiceImpl implements UserService{
             e.printStackTrace();
             throw new CustomException(CommonErrorCode.MNF);
         }
+
+        InfoDto infoDto = null;
+
         User user = new User();
         dto.setUserPk(user.getUserPk());
         dto.setUserEmail(user.getUserEmail());
         dto.setUserManner(user.getUserManner());
         dto.setUserName(user.getUserName());
         dto.setUserPhone(user.getUserPhone());
+//        return InfoResponseDto.success(infoDto);
         return InfoResponseDto.success(user.getUserPk(), user.getUserEmail(),user.getUserName(),user.getUserPhone(),user.getUserManner());
     }
 //
