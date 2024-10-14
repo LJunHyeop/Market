@@ -20,12 +20,12 @@ public class InterestService {
     private final UserRepository userRepository;
     private final InterestRepository interestRepository;
     private final ProductRepository productRepository;
+    private final AuthenticationFacade authenticationFacade;
 
     // 관심 상품 추가
     public void postInterest(Long productPk){
         // 로그인한 유저 정보 받아오기
-//        authenticationFacade.getLoginUserId()
-        Long userId=0L;
+        Long userId=authenticationFacade.getLoginUserPk();
         User user=userRepository.getReferenceById(userId);
         Interest interest=new Interest();
         interest.setUser(user);
@@ -36,8 +36,7 @@ public class InterestService {
 
     // 관심 상품 조회
     public List<InterestRes> getMyInterestList(){
-//        authenticationFacade.getLoginUserId()
-        Long userPk=0L; /* userRepository 값 대입 */
+        Long userPk=authenticationFacade.getLoginUserPk();
         User user=userRepository.getReferenceById(userPk);
 //        customException?
         if(userPk==null){throw new RuntimeException();}
@@ -55,8 +54,9 @@ public class InterestService {
     // 관심 상품 삭제
     public void deleteInterest(Long productPk){
         Interest interest=new Interest();
-//        User user=userRepository.getByUserId();
-//        interest.setUser(user);
+        Long userId=authenticationFacade.getLoginUserPk();
+        User user=userRepository.getReferenceById(userId);
+        interest.setUser(user);
         Product product=productRepository.getReferenceById(productPk);
         interest.setProduct(product);
         interestRepository.delete(interest);

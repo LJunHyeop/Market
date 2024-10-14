@@ -1,14 +1,13 @@
 package com.example.market.common;
 
-import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties.Jwt;
+import java.util.List;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.ConstructorBinding;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-
-import java.util.List;
 
 @Getter
 //@ConfigurationProperties: yaml에 작성되어 있는 데이터를 객체화 시켜주는 애노테이션
