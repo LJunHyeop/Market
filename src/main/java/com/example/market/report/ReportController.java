@@ -5,6 +5,7 @@ import com.example.market.report.model.GetReportRes;
 import com.example.market.report.model.PostReport;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -30,12 +31,12 @@ public class ReportController {
     //신고 전체리스트 조회 컨트롤러
    @GetMapping("/Get/List")
    @Operation(summary = "전체유저 신고리스트")
-  public List<GetReportReq> getReportList(@RequestParam GetReportRes p){
-      return  service.GetReportList(p);
+  public List<Integer> getReportList(@RequestParam PostReport p){
+      return  service.getReportList(p);
    }
-    @GetMapping("/Get/User")
-    @Operation(summary = "특정유저 신고리스트")
-   public List<GetReportReq> getReportUser(@RequestParam GetReportRes p){
-        return service.GetReport(p);
-    }
+//    @GetMapping("/Get/User")
+//    @Operation(summary = "특정유저 신고리스트")
+//   public List<GetReportReq> getReportUser(@RequestParam GetReportRes p){
+//        return service.GetReport(p);
+//    }
 }

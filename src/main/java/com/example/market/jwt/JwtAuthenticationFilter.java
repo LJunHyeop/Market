@@ -23,7 +23,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         String token = jwtTokenProvider.resolveToken(request);
+
         log.info("JwtAuthenticationFilter-Token: {}", token);
+        log.info("Is token valid: {}", jwtTokenProvider.isValidateToken(token));
+
 
         if(token != null && jwtTokenProvider.isValidateToken(token)) {
 

@@ -12,9 +12,13 @@ import lombok.ToString;
 @Data
 public class GetReportRes {
 
-    private User userPk;
+    private User userPk1;
 
-    private int reportPk;
+    private long reportPk;
+
+    private long userPk2;
+
+
 
 
 }

@@ -6,8 +6,8 @@ import com.example.market.entity.User;
 import com.example.market.interest.common.InterestRes;
 import com.example.market.interest.repository.InterestRepository;
 import com.example.market.product.repository.ProductRepository;
-
-import com.example.market.user_assessment.repository.UserRepository;
+import com.example.market.security.AuthenticationFacade;
+import com.example.market.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -13,4 +13,6 @@ public class PostReport {
 
     private int reportType;
 
+    private long productPk;
+
 }
