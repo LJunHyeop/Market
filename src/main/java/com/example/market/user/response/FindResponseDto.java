@@ -12,25 +12,25 @@ import static com.example.market.user.config.GlobalConst.SUCCESS_MESSAGE;
 @Setter
 @Getter
 public class FindResponseDto extends ResponseDto{
-    private String userPw;
 
-    private FindResponseDto(String userPw) {
+
+    private FindResponseDto() {
         super(SUCCESS_CODE, SUCCESS_MESSAGE);
-        this.userPw = userPw;
+
     }
 
-    public static ResponseEntity<FindResponseDto> success(String userPw) {
-        FindResponseDto result = new FindResponseDto(userPw);
+    public static ResponseEntity<FindResponseDto> success() {
+        FindResponseDto result = new FindResponseDto();
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    public static ResponseEntity<FindResponseDto> fail(String userPw) {
-        FindResponseDto result = new FindResponseDto(userPw);
+    public static ResponseEntity<FindResponseDto> fail() {
+        FindResponseDto result = new FindResponseDto();
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    public static ResponseEntity<FindResponseDto> noUser(String userPw) {
-        FindResponseDto result = new FindResponseDto(userPw);
+    public static ResponseEntity<FindResponseDto> noUser() {
+        FindResponseDto result = new FindResponseDto();
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 }

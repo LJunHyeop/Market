@@ -10,11 +10,9 @@ import lombok.Setter;
 @Getter
 public class FindRequestDto{
 
-    private String userEmail;
-@JsonIgnore
-    private String userPw;
-
     private String userPhone;
+    private String userEmail;
+    private String userPw;
 
 
 }

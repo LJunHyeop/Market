@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("api/user")
-@Tag(name="유저", description="유저 CRUD")
+@Tag(name="유저", description="유저")
 public class UserController {
     private final UserService userservice;
 
@@ -62,13 +62,30 @@ public class UserController {
         return userservice.infoUpdate(dto);
     }
 
-    //  유저 페이지 - 아이디 비번 찾기 //
-    @PostMapping("/find-id")
+    //  유저 페이지 - 비번 찾기 //
+    @PostMapping("/find-pw")
     @Operation(summary = "비밀번호 찾기", description = "USER_BOOK_DESCRIPTION")
     @ApiResponse(responseCode = "200", description = "USER_BOOK_RESPONSE_ERROR_CODE",
             content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = FindResponseDto.class)))
-    public ResponseEntity<?super FindResponseDto> findId(@ParameterObject FindRequestDto dto) {
+    public ResponseEntity<?super FindResponseDto> findId(@RequestBody FindRequestDto dto) {
         return userservice.findId(dto);
+    }
+    //  유저 페이지 - 아이디 찾기 //
+    @PostMapping("/find-email")
+    @Operation(summary = "이메일 찾기", description = "USER_BOOK_DESCRIPTION")
+    @ApiResponse(responseCode = "200", description = "USER_BOOK_RESPONSE_ERROR_CODE",
+            content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = FindEmailResponseDto.class)))
+    public ResponseEntity<?super FindEmailResponseDto> searchEmail(@RequestBody FindEmailRequestDto dto) {
+        return userservice.searchEmail(dto);
+    }
+
+    @PostMapping("/sign-out")
+    @Operation(summary = "로그아웃", description = "")
+    @ApiResponse(responseCode = "200", description = "",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = LogoutResponseDto.class)))
+    public ResponseEntity<? super LogoutResponseDto> logout(HttpServletResponse res) {
+        return userservice.logout(res);
     }
 }

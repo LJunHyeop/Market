@@ -8,6 +8,7 @@ import com.example.market.security.AuthenticationFacade;
 import com.example.market.security.MyUser;
 import com.example.market.user.exception.CommonErrorCode;
 import com.example.market.user.exception.CustomException;
+import com.example.market.user.exception.UserErrorCode;
 import com.example.market.user.repository.UserRepository;
 import com.example.market.user.request.*;
 import com.example.market.user.response.*;
@@ -16,11 +17,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
 
-import java.util.Objects;
-import java.util.Optional;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -32,9 +34,10 @@ public class UserServiceImpl implements UserService {
     private final JwtTokenProvider jwtTokenProvider;
     private final AppProperties appProperties;
     private final CookieUtils cookieUtils;
-
+    private final PasswordEncoder passwordEncoder;
 
     @Override//회원가입
+    @Transactional
     public ResponseEntity<? super SignUpResponseDto> signUpUser(SignUpRequestDto dto) {
 
         String userEmail = dto.getUserEmail();
@@ -71,10 +74,10 @@ public class UserServiceImpl implements UserService {
 
     //유저로그인
     @Override
+    @Transactional
     public ResponseEntity<? super SignInResponseDto> signInUser(HttpServletResponse res, SignInRequestDto dto) {
 
-//        dto.setUserName(dto.getUserName());
-//        dto.setUserPw(dto.getUserPw());
+
         String accessToken = null;
         String refreshToken = null;
         try {
@@ -119,47 +122,79 @@ public class UserServiceImpl implements UserService {
         return SignInResponseDto.success(accessToken);
     }
 
-
     //    //소셜로그인
 //    @Override
+//    @Transactional
 //    public ResponseEntity<? super SocialResponseDto> socialIn(SocialRequestDto dto) {
 //        return null;
 //    }
 
-    //아이디 및 비번 찾기
+    // 이메일 찾기
     @Override
-    public ResponseEntity<? super FindResponseDto> findId(FindRequestDto dto) {
-        // 가정: UserRepository를 통해 사용자 데이터를 조회할 수 있다고 가정
-        userRepository.findByUserEmail(dto.getUserEmail());
-        User user = new User();
-//        // 사용자가 존재하지 않는 경우
-//        if (userRepository.isEmpty()) {
-//
-//            return FindResponseDto.noUser( null);
-//        }
-//
-//        User user = userOptional.get();
+    @Transactional
+    public ResponseEntity<? super FindEmailResponseDto> searchEmail(FindEmailRequestDto dto) {
 
-        // 입력된 이메일과 전화번호가 일치하는지 확인
-        if (Objects.equals(dto.getUserEmail(), user.getUserEmail()) &&
-                Objects.equals(dto.getUserPhone(), user.getUserPhone())) {
+        try { if (dto == null) { throw new CustomException(CommonErrorCode.VF); }
+        } catch (CustomException e) { throw new CustomException(e.getErrorCode()); }
 
-            // 비밀번호를 반환 (단, 실제 환경에서는 비밀번호 노출을 피해야 함)
-            return FindResponseDto.success(user.getUserPw());
+        User user = userRepository.findByUserNameAndUserPhone(dto.getUserName(), dto.getUserPhone());
+
+        try {
+            if (user == null) { throw new CustomException(UserErrorCode.NU); }
+        } catch (CustomException e) {
+            throw new CustomException(e.getErrorCode());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new CustomException(CommonErrorCode.DBE);
         }
 
-        // 일치하지 않는 경우
-        return FindResponseDto.fail(null);
+        return FindEmailResponseDto.success(user.getUserEmail());
+
+    }
+
+    //비번 찾기
+    @Override
+    @Transactional
+    public ResponseEntity<? super FindResponseDto> findId(FindRequestDto dto) {
+
+        try { if (dto == null) { throw new CustomException(CommonErrorCode.VF); }
+        } catch (CustomException e) { throw new CustomException(e.getErrorCode()); }
+
+        User user = userRepository.findByUserEmailAndUserPhone(dto.getUserEmail(), dto.getUserPhone());
+
+        try {
+
+            if (user == null) { throw new CustomException(UserErrorCode.NU); }
+
+            String userPw = dto.getUserPw();
+            String encodingPw = passwordEncoder.encode(userPw);
+            dto.setUserPw(encodingPw);
+
+            user.setUserPw(dto.getUserPw());
+
+            userRepository.save(user);
+
+        } catch (CustomException e) {
+            throw new CustomException(e.getErrorCode());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new CustomException(CommonErrorCode.DBE);
+        }
+
+        return FindResponseDto.success();
+
     }
 
     //    //메일 인증
 //    @Override
+//        @Transactional
 //    public ResponseEntity<? super MailResponseDto> findMail(MailRequestDto dto) {
 //        return null;
 //    }
 //
     //마이페이지
     @Override
+    @Transactional
     public ResponseEntity<? super InfoResponseDto> infoPage(InfoRequestDto dto) {
 
 
@@ -184,6 +219,7 @@ public class UserServiceImpl implements UserService {
 
     //마이페이지 수정
     @Override
+    @Transactional
     public ResponseEntity<? super InfoUpdateResponseDto> infoUpdate(InfoUpdateRequestDto dto) {
         try {
             dto.setUserPk(authenticationFacade.getLoginUserPk());
@@ -202,9 +238,12 @@ public class UserServiceImpl implements UserService {
         return InfoUpdateResponseDto.success(user.getUserName());
     }
 
-//    //로그아웃
-//    @Override
-//    public ResponseEntity<? super LogoutResponseDto> logout(LogoutRequestDto dto) {
-//        return null;
-//    }
+    //로그아웃
+    @Override
+    @Transactional
+    public ResponseEntity<? super LogoutResponseDto> logout(HttpServletResponse res) {
+        cookieUtils.deleteCookie(res, "refresh-token");
+
+        return LogoutResponseDto.success();
+    }
 }
