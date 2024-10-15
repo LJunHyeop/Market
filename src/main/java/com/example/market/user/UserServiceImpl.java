@@ -19,10 +19,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final AuthenticationFacade authenticationFacade;
@@ -40,14 +43,14 @@ public class UserServiceImpl implements UserService{
 
         boolean isExist = userRepository.existsByUserEmail(userEmail);
 
-        if (isExist){
+        if (isExist) {
 
             return ResponseEntity
                     .status(HttpStatus.CONFLICT)
                     .body(SignUpResponseDto.failure("이미 존재하는 사용자입니다."));
         }
 
-        User user  = new User();
+        User user = new User();
 
         user.setUserEmail(userEmail);
         user.setUserPw(bCryptPasswordEncoder.encode(userPw));
@@ -60,12 +63,12 @@ public class UserServiceImpl implements UserService{
         user.setUserRole(1);
 
 
-
         User saverUser = userRepository.save(user);
 
 
         return SignUpResponseDto.success(saverUser.getUserPk());
     }
+
     //유저로그인
     @Override
     public ResponseEntity<? super SignInResponseDto> signInUser(HttpServletResponse res, SignInRequestDto dto) {
@@ -76,16 +79,16 @@ public class UserServiceImpl implements UserService{
         String refreshToken = null;
         try {
 
-            if (dto.getUserEmail() == null || dto.getUserEmail().isEmpty() ){
+            if (dto.getUserEmail() == null || dto.getUserEmail().isEmpty()) {
                 throw new CustomException(CommonErrorCode.VF);
             }
-            if (dto.getUserPw() == null || dto.getUserPw().isEmpty()){
+            if (dto.getUserPw() == null || dto.getUserPw().isEmpty()) {
                 throw new CustomException(CommonErrorCode.VF);
             }
 
             String userEmail = dto.getUserEmail();
             User user = userRepository.findByUserEmail(userEmail);
-            if (user == null){
+            if (user == null) {
                 throw new CustomException(CommonErrorCode.SF);
             }
             String userPw = dto.getUserPw();
@@ -122,14 +125,34 @@ public class UserServiceImpl implements UserService{
 //    public ResponseEntity<? super SocialResponseDto> socialIn(SocialRequestDto dto) {
 //        return null;
 //    }
+
+    //아이디 및 비번 찾기
+    @Override
+    public ResponseEntity<? super FindResponseDto> findId(FindRequestDto dto) {
+        // 가정: UserRepository를 통해 사용자 데이터를 조회할 수 있다고 가정
+        userRepository.findByUserEmail(dto.getUserEmail());
+        User user = new User();
+//        // 사용자가 존재하지 않는 경우
+//        if (userRepository.isEmpty()) {
 //
-//    //아이디 및 비번 찾기
-//    @Override
-//    public ResponseEntity<? super FindResponseDto> findId(FindRequestDto dto) {
-//        return null;
-//    }
+//            return FindResponseDto.noUser( null);
+//        }
 //
-//    //메일 인증
+//        User user = userOptional.get();
+
+        // 입력된 이메일과 전화번호가 일치하는지 확인
+        if (Objects.equals(dto.getUserEmail(), user.getUserEmail()) &&
+                Objects.equals(dto.getUserPhone(), user.getUserPhone())) {
+
+            // 비밀번호를 반환 (단, 실제 환경에서는 비밀번호 노출을 피해야 함)
+            return FindResponseDto.success(user.getUserPw());
+        }
+
+        // 일치하지 않는 경우
+        return FindResponseDto.fail(null);
+    }
+
+    //    //메일 인증
 //    @Override
 //    public ResponseEntity<? super MailResponseDto> findMail(MailRequestDto dto) {
 //        return null;
@@ -156,18 +179,18 @@ public class UserServiceImpl implements UserService{
         dto.setUserManner(user.getUserManner());
         dto.setUserName(user.getUserName());
         dto.setUserPhone(user.getUserPhone());
-        return InfoResponseDto.success(user.getUserPk(), user.getUserEmail(),user.getUserName(),user.getUserPhone(),user.getUserManner());
+        return InfoResponseDto.success(user.getUserPk(), user.getUserEmail(), user.getUserName(), user.getUserPhone(), user.getUserManner());
     }
 
     //마이페이지 수정
     @Override
     public ResponseEntity<? super InfoUpdateResponseDto> infoUpdate(InfoUpdateRequestDto dto) {
-        try{
+        try {
             dto.setUserPk(authenticationFacade.getLoginUserPk());
-            if (dto.getUserPk() <= 0){
+            if (dto.getUserPk() <= 0) {
                 throw new RuntimeException();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new CustomException(CommonErrorCode.MNF);
         }

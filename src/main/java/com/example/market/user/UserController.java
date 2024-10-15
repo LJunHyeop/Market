@@ -1,13 +1,7 @@
 package com.example.market.user;
 
-import com.example.market.user.request.InfoRequestDto;
-import com.example.market.user.request.InfoUpdateRequestDto;
-import com.example.market.user.request.SignInRequestDto;
-import com.example.market.user.request.SignUpRequestDto;
-import com.example.market.user.response.InfoResponseDto;
-import com.example.market.user.response.InfoUpdateResponseDto;
-import com.example.market.user.response.SignInResponseDto;
-import com.example.market.user.response.SignUpResponseDto;
+import com.example.market.user.request.*;
+import com.example.market.user.response.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -66,5 +60,15 @@ public class UserController {
                     mediaType = "application/json", schema = @Schema(implementation = InfoUpdateResponseDto.class)))
     public ResponseEntity<?super InfoUpdateResponseDto> info(@ParameterObject InfoUpdateRequestDto dto) {
         return userservice.infoUpdate(dto);
+    }
+
+    //  유저 페이지 - 아이디 비번 찾기 //
+    @PostMapping("/find-id")
+    @Operation(summary = "비밀번호 찾기", description = "USER_BOOK_DESCRIPTION")
+    @ApiResponse(responseCode = "200", description = "USER_BOOK_RESPONSE_ERROR_CODE",
+            content = @Content(
+                    mediaType = "application/json", schema = @Schema(implementation = FindResponseDto.class)))
+    public ResponseEntity<?super FindResponseDto> findId(@ParameterObject FindRequestDto dto) {
+        return userservice.findId(dto);
     }
 }
