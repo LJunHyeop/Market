@@ -1,12 +1,15 @@
 package com.example.market.user.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import static com.example.market.user.config.GlobalConst.SUCCESS_CODE;
 import static com.example.market.user.config.GlobalConst.SUCCESS_MESSAGE;
-
+@Getter
+@Setter
 public class InfoResponseDto extends ResponseDto{
 //    private String accessToken;
     private Long userPk;

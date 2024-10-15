@@ -1,9 +1,11 @@
 package com.example.market.user;
 
 import com.example.market.user.request.InfoRequestDto;
+import com.example.market.user.request.InfoUpdateRequestDto;
 import com.example.market.user.request.SignInRequestDto;
 import com.example.market.user.request.SignUpRequestDto;
 import com.example.market.user.response.InfoResponseDto;
+import com.example.market.user.response.InfoUpdateResponseDto;
 import com.example.market.user.response.SignInResponseDto;
 import com.example.market.user.response.SignUpResponseDto;
 import jakarta.servlet.http.HttpServletResponse;
@@ -36,4 +38,7 @@ public interface UserService {
     //
         //마이페이지
     ResponseEntity<? super InfoResponseDto> infoPage(InfoRequestDto dto);
+
+    //마이페이지 수정
+    ResponseEntity<? super InfoUpdateResponseDto> infoUpdate(InfoUpdateRequestDto dto);
 }

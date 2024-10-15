@@ -139,6 +139,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public ResponseEntity<? super InfoResponseDto> infoPage(InfoRequestDto dto) {
 
+
         try {
             dto.setUserPk(authenticationFacade.getLoginUserPk());
             if (dto.getUserPk() <= 0) {
@@ -148,7 +149,8 @@ public class UserServiceImpl implements UserService{
             e.printStackTrace();
             throw new CustomException(CommonErrorCode.MNF);
         }
-        User user = new User();
+
+        User user = userRepository.findUserByUserPk(dto.getUserPk());
         dto.setUserPk(user.getUserPk());
         dto.setUserEmail(user.getUserEmail());
         dto.setUserManner(user.getUserManner());
@@ -156,13 +158,27 @@ public class UserServiceImpl implements UserService{
         dto.setUserPhone(user.getUserPhone());
         return InfoResponseDto.success(user.getUserPk(), user.getUserEmail(),user.getUserName(),user.getUserPhone(),user.getUserManner());
     }
-//
-//    //마이페이지 수정
-//    @Override
-//    public ResponseEntity<? super InfoUpdateResponseDto> infoUpdate(InfoUpdateRequestDto dto) {
-//        return null;
-//    }
-//
+
+    //마이페이지 수정
+    @Override
+    public ResponseEntity<? super InfoUpdateResponseDto> infoUpdate(InfoUpdateRequestDto dto) {
+        try{
+            dto.setUserPk(authenticationFacade.getLoginUserPk());
+            if (dto.getUserPk() <= 0){
+                throw new RuntimeException();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new CustomException(CommonErrorCode.MNF);
+        }
+        User user = userRepository.findUserByUserPk(dto.getUserPk());
+        dto.setUserPk(user.getUserPk());
+        user.setUserName(dto.getUserName());
+        user.setUserPhone(dto.getUserPhone());
+        userRepository.save(user);
+        return InfoUpdateResponseDto.success(user.getUserName());
+    }
+
 //    //로그아웃
 //    @Override
 //    public ResponseEntity<? super LogoutResponseDto> logout(LogoutRequestDto dto) {
