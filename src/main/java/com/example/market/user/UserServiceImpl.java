@@ -13,6 +13,7 @@ import com.example.market.user.request.*;
 import com.example.market.user.response.*;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -64,7 +66,6 @@ public class UserServiceImpl implements UserService{
 
         return SignUpResponseDto.success(saverUser.getUserPk());
     }
-
     //유저로그인
     @Override
     public ResponseEntity<? super SignInResponseDto> signInUser(HttpServletResponse res, SignInRequestDto dto) {
@@ -75,46 +76,47 @@ public class UserServiceImpl implements UserService{
         String refreshToken = null;
         try {
 
-        if (dto.getUserEmail() == null || dto.getUserEmail().isEmpty() ){
-            throw new CustomException(CommonErrorCode.VF);
-        }
-        if (dto.getUserPw() == null || dto.getUserPw().isEmpty()){
-            throw new CustomException(CommonErrorCode.VF);
-        }
+            if (dto.getUserEmail() == null || dto.getUserEmail().isEmpty() ){
+                throw new CustomException(CommonErrorCode.VF);
+            }
+            if (dto.getUserPw() == null || dto.getUserPw().isEmpty()){
+                throw new CustomException(CommonErrorCode.VF);
+            }
 
-        String userEmail = dto.getUserEmail();
-        User user = userRepository.findByUserEmail(userEmail);
-        if (user == null){
-            throw new CustomException(CommonErrorCode.SF);
-        }
-        String userPw = dto.getUserPw();
-        String encodingPw = user.getUserPw();
-        boolean matches = bCryptPasswordEncoder.matches(userPw, encodingPw);
-        if (!matches) {
-            throw new CustomException(CommonErrorCode.SF);
-        }
-        MyUser myUser = MyUser.builder()
-                .userPk(user.getUserPk())
-                .role(user.getUserRole())
-                .build();
+            String userEmail = dto.getUserEmail();
+            User user = userRepository.findByUserEmail(userEmail);
+            if (user == null){
+                throw new CustomException(CommonErrorCode.SF);
+            }
+            String userPw = dto.getUserPw();
+            String encodingPw = user.getUserPw();
+            boolean matches = bCryptPasswordEncoder.matches(userPw, encodingPw);
+            if (!matches) {
+                throw new CustomException(CommonErrorCode.SF);
+            }
+            MyUser myUser = MyUser.builder()
+                    .userPk(user.getUserPk())
+                    .role(user.getUserRole())
+                    .build();
 
-        accessToken = jwtTokenProvider.generateAccessToken(myUser);
-        refreshToken = jwtTokenProvider.generateRefreshToken(myUser);
+            accessToken = jwtTokenProvider.generateAccessToken(myUser);
+            refreshToken = jwtTokenProvider.generateRefreshToken(myUser);
 
-        //  RefreshToken 을 갱신한다.  //
-        int refreshTokenMaxAge = appProperties.getJwt().getRefreshTokenCookieMaxAge();
-        cookieUtils.deleteCookie(res, "refresh-token");
-        cookieUtils.setCookie(res, "refresh-token", refreshToken, refreshTokenMaxAge);
-    } catch (CustomException e) {
-        throw new CustomException(e.getErrorCode());
-    } catch (Exception e) {
-        e.printStackTrace();
-        throw new CustomException(CommonErrorCode.DBE);
-    }
+            //  RefreshToken 을 갱신한다.  //
+            int refreshTokenMaxAge = appProperties.getJwt().getRefreshTokenCookieMaxAge();
+            cookieUtils.deleteCookie(res, "refresh-token");
+            cookieUtils.setCookie(res, "refresh-token", refreshToken, refreshTokenMaxAge);
+        } catch (CustomException e) {
+            throw new CustomException(e.getErrorCode());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new CustomException(CommonErrorCode.DBE);
+        }
         return SignInResponseDto.success(accessToken);
     }
 
-//    //소셜로그인
+
+    //    //소셜로그인
 //    @Override
 //    public ResponseEntity<? super SocialResponseDto> socialIn(SocialRequestDto dto) {
 //        return null;
