@@ -30,6 +30,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
+
 
 
 @RestController
@@ -118,5 +120,14 @@ public class ProductController {
         response.put("productPhoto", productPhoto) ;
 
         return new ResponseEntity<>(response, HttpStatus.OK) ;
+    }
+
+    @PutMapping("/updateLike")
+    @Operation(summary = "상품 좋아요", description = "p = 상품 PK값")
+    public ResponseEntity putMethodName(HttpServletRequest req, @ModelAttribute @ParameterObject long p) {
+        String token = null ;
+        int result = service.putProductLike(token, p) ;
+        
+        return new ResponseEntity<>(result, HttpStatus.OK) ;
     }
 }

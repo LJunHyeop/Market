@@ -15,6 +15,4 @@ public class PostProductRegistrationReq {
     private String productComment ;
     private String createdAt ;
     private String updatedAt ;
-
-    private String productPhoto ;
 }
