@@ -22,7 +22,17 @@ public class CustomFileUtils {
     //폴더 만들기
     public String makeFolders(String path) {
         File folder = new File(uploadPath, path);
-        folder.mkdirs();
+        // folder.mkdirs();
+        if (!folder.exists()) {
+            if (folder.mkdirs()) {
+                log.info("Successfully created directory: {}", folder.getAbsolutePath());
+            } else {
+                log.error("Failed to create directory: {}", folder.getAbsolutePath());
+                throw new RuntimeException("Failed to create directory: " + folder.getAbsolutePath());
+            }
+        } else {
+            log.info("Directory already exists: {}", folder.getAbsolutePath());
+        }
         return folder.getAbsolutePath();
     }
     // UUID 랜덤 파일명
@@ -53,10 +63,25 @@ public class CustomFileUtils {
     // 파일저장  target 는 경로랑 파일명까지 지정 된상태
     public  void transferTo(MultipartFile mf , String target ) throws Exception {
         log.info("uploadPath:{}",uploadPath);
-        File saveFile = new File(uploadPath , target); // 죄종경로
+        File saveFile = new File(uploadPath , target); // 최종경로
+        File parentDir = saveFile.getParentFile();
 
-        mf.transferTo(saveFile);
+        // 상위 디렉토리 확인 및 생성
+        if (!parentDir.exists()) {
+            if (parentDir.mkdirs()) {
+                log.info("Successfully created parent directory: {}", parentDir.getAbsolutePath());
+            } else {
+                log.error("Failed to create parent directory: {}", parentDir.getAbsolutePath());
+                throw new RuntimeException("Failed to create parent directory: " + parentDir.getAbsolutePath());
+            }
+        } else {
+            log.info("Parent directory already exists: {}", parentDir.getAbsolutePath());
+        }
+    
+        log.info("Attempting to save file to path: {}", saveFile.getAbsolutePath());
+        mf.transferTo(saveFile);  // 이 부분에서 파일 저장 시도
     }
+    
     // 폴더삭제
     public  void deleteFolder(String absoluteFolderPath){
         File folder = new File(absoluteFolderPath);

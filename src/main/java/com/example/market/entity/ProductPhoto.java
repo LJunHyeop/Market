@@ -18,11 +18,6 @@ public class ProductPhoto {
     @Comment("상품 PK")
     private Product product ;
 
-    @ManyToOne
-    @JoinColumn(name="user_pk", nullable = false)
-    @Comment("유저 PK")
-    private User user ;
-
     @Column
     @Comment("상품 사진")
     private String productPhoto ;

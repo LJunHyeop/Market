@@ -4,6 +4,7 @@ import com.example.market.common.Role;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Comment;
 
@@ -11,6 +12,7 @@ import org.hibernate.annotations.Comment;
 @Table(name = "user") // 백틱으로 감싸기
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 public class User extends UpdateAt {
     @Id

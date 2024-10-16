@@ -13,12 +13,16 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.market.common.CustomFileUtils;
 import com.example.market.entity.Product;
 import com.example.market.entity.ProductPhoto;
+import com.example.market.entity.User;
 import com.example.market.product.model.GetProduct;
 import com.example.market.product.model.PostProductRegistrationReq;
 import com.example.market.product.model.UpdateProductReq;
+import com.example.market.product.model.UserFindRes;
 import com.example.market.product.repository.ProductPhotoRepository;
 import com.example.market.product.repository.ProductRepository;
+import com.example.market.user.repository.UserRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +34,7 @@ public class ProductService {
     private final ProductRepository repository ;
     private final ProductPhotoRepository photoRepository ;
     private final CustomFileUtils customFileUtils ;
+    private final UserRepository userRepository ;
     // private final UserRepository userRepository ;
 
 
@@ -40,12 +45,30 @@ public class ProductService {
 
         // Authentication auth = jwtTokenProvider.getAuthentication(token) ;
 
+        // User user = userRepository.findById(p.getUserPk()) ;
+        User user = userRepository.getReferenceById(p.getUserPk()) ;
+        // UserFindRes user = mapper.getUser(p.getUserPk()) ;
+
+        log.info("user: {}", user) ;
+        System.out.println(user) ;
+        
+
+        if (user == null) {
+            throw new RuntimeException("User not found with userPk: " + p.getUserPk());
+        }
+        // new User() ;
+        
+        log.info("p: {}", p) ;
+        log.info("pics: {}", pics) ;
+
         Product product = new Product() ;
+        product.setUser(user) ;
         product.setProductName(p.getProductName()) ;
         product.setProductPrice(p.getProductPrice()) ;
         product.setProductComment(p.getProductComment()) ;
         // product.setUser(auth) ;
         repository.save(product) ;
+        log.info("Saved product with ID: {}", product.getProductPk()) ;
         // product.setProductLike(p.getProductLike()) ;
 
 
@@ -54,13 +77,19 @@ public class ProductService {
         try{
             List<ProductPhoto> picsList = new ArrayList<>() ;
             // 파일 저장 경로 설정 및 폴더 생성
-            String path = String.format("photo/%d", product.getProductPk()) ;
+            String path = String.format("pic/%d", product.getProductPk()) ;
+            log.info("path: {}", path);
             customFileUtils.makeFolders(path) ;
 
             for(MultipartFile pic : pics){
                 // 랜덤 파일 이름 생성 및 파일 저장
                 String saveFileName = customFileUtils.makeRandomFileName(pic) ;
+                log.info("saveFileName: {}", saveFileName) ;
+
                 String target = String.format("%s/%s", path, saveFileName) ;
+                log.info("Trying to load file from: {}", customFileUtils.uploadPath);
+                log.info("Saving file to: {}", target);
+
                 customFileUtils.transferTo(pic, target) ;
 
                 picName.add(saveFileName) ;
@@ -226,5 +255,15 @@ public class ProductService {
         } else {
             return repository.countByProductNameOrProductComment(p, p) ; // 검색어로 필터링된 항목 수 반환
         }
+    }
+
+    // 상품 좋아요
+    public int putProductLike(String token, long p) {
+        // Authentication auth = jwtTokenProvider.getAuthentication(token) ;
+
+        Product product = repository.getReferenceById(p) ;
+
+
+        return 0 ;
     }
 }
