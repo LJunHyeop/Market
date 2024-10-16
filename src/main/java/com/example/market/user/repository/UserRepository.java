@@ -8,6 +8,8 @@ import com.example.market.entity.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User,Long> {
+    User findById(long userPk) ;
+
     boolean existsByUserEmail(String userEmail);
 
     User findByUserEmail(String userEmail);
