@@ -1,15 +1,14 @@
 package com.example.market.user;
 
-import com.example.market.user.request.InfoRequestDto;
-import com.example.market.user.request.SignInRequestDto;
-import com.example.market.user.request.SignUpRequestDto;
-import com.example.market.user.response.InfoResponseDto;
-import com.example.market.user.response.SignInResponseDto;
-import com.example.market.user.response.SignUpResponseDto;
+import com.example.market.user.request.*;
+import com.example.market.user.response.*;
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface UserService {
+
     //회원가입
     ResponseEntity<? super SignUpResponseDto> signUpUser(SignUpRequestDto dto);
 
@@ -17,23 +16,23 @@ public interface UserService {
     ResponseEntity<? super SignInResponseDto> signInUser(HttpServletResponse res, SignInRequestDto dto);
 
     //    //소셜로그인
-    //    @Override
-    //    public ResponseEntity<? super SocialResponseDto> socialIn(SocialRequestDto dto) {
-    //        return null;
-    //    }
-    //
-    //    //아이디 및 비번 찾기
-    //    @Override
-    //    public ResponseEntity<? super FindResponseDto> findId(FindRequestDto dto) {
-    //        return null;
-    //    }
-    //
-    //    //메일 인증
-    //    @Override
-    //    public ResponseEntity<? super MailResponseDto> findMail(MailRequestDto dto) {
-    //        return null;
-    //    }
-    //
-        //마이페이지
+//    @Override
+//    @Transactional
+//    public ResponseEntity<? super SocialResponseDto> socialIn(SocialRequestDto dto) {
+//        return null;
+//    }
+    // 이메일 찾기
+    ResponseEntity<? super FindEmailResponseDto> searchEmail(FindEmailRequestDto dto);
+
+    //아이디 및 비번 찾기
+    ResponseEntity<? super FindResponseDto> findId(FindRequestDto dto);
+
+    //마이페이지
     ResponseEntity<? super InfoResponseDto> infoPage(InfoRequestDto dto);
+
+    //마이페이지 수정
+    ResponseEntity<? super InfoUpdateResponseDto> infoUpdate(InfoUpdateRequestDto dto);
+
+    //로그아웃
+    ResponseEntity<? super LogoutResponseDto> logout(HttpServletResponse res);
 }
