@@ -12,7 +12,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @SpringBootApplication
 @ConfigurationPropertiesScan
 @EnableJpaAuditing // auditing ??? ????
-@OpenAPIDefinition(info = @Info(title = "API 명", version = "v1"))
 public class MarketApplication {
 
     @Bean
