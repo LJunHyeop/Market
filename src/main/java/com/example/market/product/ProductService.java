@@ -222,11 +222,6 @@ public class ProductService {
 
     // 전체 검색, 검색어 검색
     public List<GetProduct> getAllProduct(String token, String p, int page, int size){
-        Authentication auth = jwtTokenProvider.getAuthentication(token) ;
-        SecurityContextHolder.getContext().setAuthentication(auth) ;
-        MyUserDetail userDetails = (MyUserDetail) auth.getPrincipal();
-        long userPk = userDetails.getMyUser().getUserPk() ;
-        
         Pageable pageable = PageRequest.of(page, size) ;
         Page<Product> productsPage ;
 
@@ -242,7 +237,13 @@ public class ProductService {
         List<GetProduct> productList = productsPage.stream()
             .map(product -> {
                 List<ProductPhoto> productPhoto = photoRepository.findAllByProductPk(product.getProductPk());
-                String pictureName = productPhoto != null ? productPhoto.get(0).toString() : "사진없음.";
+                String pictureName;
+                // 사진 리스트가 비어있는지 확인 후 처리
+                if (productPhoto != null && !productPhoto.isEmpty()) {
+                    pictureName = productPhoto.get(0).getProductPhoto(); // 적절한 메소드로 사진 이름 가져오기
+                } else {
+                    pictureName = "default.jpg"; // 사진이 없을 경우 기본값 설정
+                }
 
                 // GetProduct 객체 생성하면서 사진 URL 추가
                 GetProduct getProduct = new GetProduct(product);
