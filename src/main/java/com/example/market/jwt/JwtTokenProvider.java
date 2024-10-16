@@ -109,7 +109,6 @@ public class JwtTokenProvider {
     }
 
     public String resolveToken(HttpServletRequest req) {
-
         String jwt = req.getHeader(appProperties.getJwt().getHeaderSchemaName());
         if (jwt == null) { return null; }
 
