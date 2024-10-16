@@ -166,8 +166,11 @@ public class ProductService {
 
 
         // Optional로 Product 조회 및 예외 처리
-        Product product = repository.findById(p.getProductPk())
-                .orElseThrow(() -> new RuntimeException("상품을 찾을 수 없습니다."));
+        Product product = repository.getReferenceById(p.getProductPk()) ;
+
+        if(product == null) {
+            throw new RuntimeException("상품을 찾을 수 없습니다.");
+        }
 
         User user = userRepository.getReferenceById(userPk) ;
         if(product.getUser() != user){
@@ -237,7 +240,16 @@ public class ProductService {
 
         // Page<Product> 결과를 List<GetProduct>로 변환
         List<GetProduct> productList = productsPage.stream()
-            .map(product -> new GetProduct(product)) // Product를 GetProduct로 변환하는 로직
+            .map(product -> {
+                List<ProductPhoto> productPhoto = photoRepository.findAllByProductPk(product.getProductPk());
+                String pictureName = productPhoto != null ? productPhoto.get(0).toString() : "사진없음.";
+
+                // GetProduct 객체 생성하면서 사진 URL 추가
+                GetProduct getProduct = new GetProduct(product);
+                getProduct.setPic("http://localhost:8080/pic/" + product.getProductPk() + "/" + pictureName);
+
+                return getProduct;
+            }) // Product를 GetProduct로 변환하는 로직
             .collect(Collectors.toList()) ;
 
         return productList ;
@@ -263,7 +275,7 @@ public class ProductService {
         long userPk = userDetails.getMyUser().getUserPk() ;
 
         // Product 객체 가져오기
-        Product product = repository.findById(p).orElse(null);
+        Product product = repository.getReferenceById(p) ;
         if (product == null) {
             throw new RuntimeException("상품이 존재하지 않습니다.") ;
         }
