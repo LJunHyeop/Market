@@ -23,7 +23,7 @@ import org.springframework.context.annotation.Configuration;
 // JWT 토큰을 swagger 에서 사용하게 만드는 코드
 @SecurityScheme(
         type = SecuritySchemeType.HTTP,
-        name = "Authorization",
+        name = "authorization",
         in = SecuritySchemeIn.HEADER,
         bearerFormat = "JWT",
         scheme = "Bearer"

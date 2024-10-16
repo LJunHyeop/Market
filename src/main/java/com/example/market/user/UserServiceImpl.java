@@ -100,6 +100,7 @@ public class UserServiceImpl implements UserService{
                     .build();
 
             accessToken = jwtTokenProvider.generateAccessToken(myUser);
+            log.info("access token: {}", accessToken);
             refreshToken = jwtTokenProvider.generateRefreshToken(myUser);
 
             //  RefreshToken 을 갱신한다.  //

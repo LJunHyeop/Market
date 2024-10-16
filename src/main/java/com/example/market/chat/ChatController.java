@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,6 +35,7 @@ public class ChatController {
     // 1:1 채팅방 생성
     @PostMapping("/create")
     @Operation(summary = "채팅방 생성")
+    @PreAuthorize("hasRole('ROLE_1')")
     public ResponseEntity<Long> createChatRoom(@RequestParam Long productPk) {
         // 게시글의 유저 ID 조회
         Long userId = productRepository.findUserPkByProductPk(productPk);
@@ -106,6 +108,7 @@ public class ChatController {
     }
 
     private User getCurrentUser(MyUser myUser) {
+
         return userRepository.findById(myUser.getUserPk()).orElse(null);
     }
 }
