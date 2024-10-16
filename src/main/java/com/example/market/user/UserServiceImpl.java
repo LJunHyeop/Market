@@ -76,12 +76,9 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public ResponseEntity<? super SignInResponseDto> signInUser(HttpServletResponse res, SignInRequestDto dto) {
-
-
         String accessToken = null;
         String refreshToken = null;
         try {
-
             if (dto.getUserEmail() == null || dto.getUserEmail().isEmpty()) {
                 throw new CustomException(CommonErrorCode.VF);
             }
@@ -106,6 +103,7 @@ public class UserServiceImpl implements UserService {
                     .build();
 
             accessToken = jwtTokenProvider.generateAccessToken(myUser);
+            log.info("access token: {}", accessToken);
             refreshToken = jwtTokenProvider.generateRefreshToken(myUser);
 
             //  RefreshToken 을 갱신한다.  //
@@ -119,6 +117,7 @@ public class UserServiceImpl implements UserService {
             e.printStackTrace();
             throw new CustomException(CommonErrorCode.DBE);
         }
+
         return SignInResponseDto.success(accessToken);
     }
 

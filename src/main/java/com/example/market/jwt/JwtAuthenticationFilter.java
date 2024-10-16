@@ -25,6 +25,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = jwtTokenProvider.resolveToken(request);
 
         log.info("JwtAuthenticationFilter-Token: {}", token);
+
         log.info("Is token valid: {}", jwtTokenProvider.isValidateToken(token));
 
 
@@ -37,4 +38,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
+
+
 }

@@ -5,8 +5,10 @@ import com.example.market.chat.entity.ChatRoomRepository;
 import com.example.market.chat.model.ChatMsgDto; // DTO 추가
 import com.example.market.entity.ChatRoom;
 import com.example.market.entity.ChatMessage;
+import com.example.market.entity.Product;
 import com.example.market.entity.User;
 
+import com.example.market.notice.NoticeController;
 import com.example.market.product.repository.ProductRepository;
 import com.example.market.security.AuthenticationFacade;
 import com.example.market.security.MyUser;
@@ -27,7 +29,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class ChatService {
-
+    private final NoticeController noticeController;
     private final ChatRoomMsgRepository chatRoomMsgRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final UserRepository userRepository;
@@ -36,40 +38,44 @@ public class ChatService {
 
     // 채팅방 생성
     public long createChatRoom(Long productPk) {
-        // 게시글의 유저 ID 조회
-        Long userId = productRepository.findUserPkByProductPk(productPk);
-
-        // 유저 ID가 null이면 예외 처리
-        if (userId == null) {
-            throw new IllegalArgumentException("Invalid product PK or user not found.");
-        }
+        // 게시글(Product) 조회
+        Product product = productRepository.findById(productPk).orElseThrow(() ->
+                new IllegalArgumentException("Invalid product PK or product not found."));
 
         // 로그인한 유저 정보 가져오기
         User loginUser = getCurrentUser(authenticationFacade.getLoginUser());
 
-        // 상대 유저 정보 가져오기
-        User productUser = userRepository.findById(userId).orElse(null);
-        if (productUser == null) {
-            throw new IllegalArgumentException("User not found for the given product.");
+        // 게시글 작성자 유저 정보 가져오기
+        Long productUserId = productRepository.findUserPkByProductPk(productPk);
+        User productUser = userRepository.findById(productUserId).orElseThrow(() ->
+                new IllegalArgumentException("User not found for the given product."));
+
+        // 로그인한 유저와 게시글 작성자가 동일한지 확인
+        if (loginUser.getUserPk().equals(productUser.getUserPk())) {
+            throw new IllegalArgumentException("You cannot create a chat room with yourself.");
         }
 
         // 기존 채팅방 조회
         ChatRoom existingChatRoom = chatRoomRepository.findByUsers(loginUser, productUser);
         if (existingChatRoom != null) {
-            return existingChatRoom.getChatRoomId(); // 기존 채팅방이 있으면 그 ID 반환
+            return existingChatRoom.getChatRoomId();
         }
 
-        // 채팅방 생성
+        // 새로운 채팅방 생성
         ChatRoom chatRoom = new ChatRoom();
         chatRoom.setUserPk1(loginUser);
         chatRoom.setUserPk2(productUser);
-        chatRoom.setState(1); // 초기 상태를 활성으로 설정
+        chatRoom.setProductPk(product);  // Product 객체 설정
+        chatRoom.setState(1);
 
         // 채팅방 저장
+        log.info("Before saving chat room: user1={}, user2={}", loginUser.getUserPk(), productUser.getUserPk());
         chatRoom = chatRoomRepository.save(chatRoom);
-        log.info("Created chat room between user {} and user {}", loginUser.getUserPk(), productUser.getUserPk());
+        log.info("Chat room created with ID: {}", chatRoom.getChatRoomId());
+
         return chatRoom.getChatRoomId();
     }
+
 
     // 메시지 저장
     public void saveMessage(ChatMsgDto chatMsgDto) {
@@ -93,8 +99,21 @@ public class ChatService {
         chatMessage.setChatMsg(chatMsgDto.getChatMsg());
         chatMessage.setCreatedAt(LocalDateTime.now()); // 메시지 생성 시간 설정
 
+        // 채팅 메시지 저장
         chatRoomMsgRepository.save(chatMessage);
         log.info("Saved message: {} from user {} in chat room {}", chatMsgDto.getChatMsg(), sender.getUserPk(), chatRoom.getChatRoomId());
+
+        // 알림 전송
+        String notificationMessage = String.format("%s: %s", sender.getUserName(), chatMsgDto.getChatMsg());
+        notifyChatClients(notificationMessage); // 인수를 전달
+    }
+
+    private void notifyChatClients(String message) {
+        try {
+            noticeController.notifyChatClients(message); // 알림 전송
+        } catch (Exception e) {
+            log.error("Failed to notify chat clients: {}", e.getMessage());
+        }
     }
 
     // 특정 유저의 모든 채팅방 조회 (상태가 1인 것만)
@@ -108,7 +127,6 @@ public class ChatService {
         chatRooms.addAll(chatRoomRepository.findAllByUserPk1AndState(loginUser, 1));
         return chatRooms;
     }
-
     // 특정 유저와의 1:1 채팅방 조회
     public ChatRoom getChatRoomBetweenUsers(Long otherUserId) {
         User loginUser = getCurrentUser(authenticationFacade.getLoginUser());
@@ -160,7 +178,8 @@ public class ChatService {
 
     // 유저 들고오는는거
     private User getCurrentUser(MyUser myUser) {
-        return userRepository.findById(myUser.getUserPk()).orElse(null);
+        return userRepository.findById(myUser.getUserPk())
+                .orElse(null);
     }
 
     // 채팅방 조회

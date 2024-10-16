@@ -7,12 +7,15 @@ import com.example.market.product.repository.ProductRepository;
 import com.example.market.report.model.GetReportReq;
 import com.example.market.report.model.GetReportRes;
 import com.example.market.report.model.PostReport;
+import com.example.market.report.model.ReportDto;
 import com.example.market.report.repository.ReportRepository;
 import com.example.market.security.AuthenticationFacade;
 import com.example.market.security.MyUser;
 import com.example.market.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -49,40 +52,26 @@ public class ReportService {
         }
         return 1;
     }
-    // 특정 유저 신고 조회 신고조회 실패시 조회 없음
-/*
-public List<GetReportReq> GetReport(GetReportRes p) {
-        Report report = new Report();
-        try{
-            report.setUserPk(p.getUserPk());
-            repository.findReportByUserPk(report.getUserPk());
-        }catch (Exception e) {
-            System.out.println("신고 조회가 없습니다.");
-        }
-        return repository.findReportByUserPk(report.getUserPk());
-    }*/
-
-
 
     // 전체 신고 조회 성공시 1 실패시 신고 조회 실패 리턴
-    public List<Integer> getReportList(PostReport p) {
-        // 신고당한 사람의 User PK를 가져옴
-        Long userId = productRepository.findUserPkByProductPk(p.getProductPk()); // 가정: GetReportRes에서 userId를 가져온다고 가정
+    public Page<ReportDto> getAllReports(Pageable pageable) {
         try {
-            // userId로 해당 사용자가 신고한 모든 Report를 조회
-            List<Report> reports = repository.findByUserPk2(userId);
-
-            // Report의 PK를 List<Long>으로 변환하여 반환
-            List<Integer> reportPks = reports.stream()
-                    .map(Report::getReportPk) // Report 객체에서 reportPk를 가져옴
-                    .collect(Collectors.toList());
-            return reportPks; // 리스트 반환
+            Page<Report> reports = repository.findAll(pageable);
+            return reports.map(report -> {
+                ReportDto dto = new ReportDto();
+                dto.setReportPk(report.getReportPk());
+                dto.setReportedUserPk(report.getUserPk2()); // 신고당한 사용자 PK
+                dto.setReportMessage(report.getReportMessage());
+                dto.setReportType(report.getReportType());
+                dto.setReportTarget(report.getReportTarget());
+                dto.setCreatedAt(report.getCreatedAt());
+                return dto;
+            });
         } catch (Exception e) {
             System.out.println("신고 조회 실패: " + e.getMessage());
-            return Collections.emptyList(); // 실패 시 빈 리스트 반환
+            return Page.empty(); // 실패 시 빈 페이지 반환
         }
     }
-
 
     private User getCurrentUser(MyUser myUser) {
         return userRepository.findById(myUser.getUserPk()).orElse(null);

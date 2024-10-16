@@ -13,7 +13,6 @@ import java.util.List;
 public class NoticeController {
 
     private final List<SseEmitter> chatEmitters = new ArrayList<>(); // 채팅 알림을 위한 리스트
-    private final List<SseEmitter> promiseEmitters = new ArrayList<>(); // 약속잡기 알림을 위한 리스트
 
     @GetMapping("/sse/chat") // 채팅 알림을 위한 SSE 엔드포인트
     public SseEmitter handleChatSse() {
@@ -26,29 +25,8 @@ public class NoticeController {
 
     @PostMapping("/notify/chat") // 채팅 알람 전송
     @Operation(summary = "채팅 알람")
-    public void notifyChatClients() {
+    public void notifyChatClients(@RequestBody String message) { // 메시지를 인수로 받도록 수정
         for (SseEmitter emitter : chatEmitters) {
-            try {
-                emitter.send("채팅을 보냈습니다.");
-            } catch (IOException e) {
-                emitter.completeWithError(e);
-            }
-        }
-    }
-
-    @GetMapping("/sse/promise") // 약속잡기 알림을 위한 SSE 엔드포인트
-    public SseEmitter handlePromiseSse() {
-        SseEmitter emitter = new SseEmitter();
-        promiseEmitters.add(emitter);
-        emitter.onCompletion(() -> promiseEmitters.remove(emitter));
-        emitter.onTimeout(() -> promiseEmitters.remove(emitter));
-        return emitter;
-    }
-
-    @PostMapping("/notify/promise") // 약속잡기 알람 전송
-    @Operation(summary = "약속잡기 알람")
-    public void notifyPromiseClients(@RequestBody String message) {
-        for (SseEmitter emitter : promiseEmitters) {
             try {
                 emitter.send(message); // 클라이언트에게 전달할 메시지
             } catch (IOException e) {
@@ -57,3 +35,5 @@ public class NoticeController {
         }
     }
 }
+
+
