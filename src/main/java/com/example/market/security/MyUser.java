@@ -13,6 +13,7 @@ import lombok.*;
 public class MyUser {
 
     private long userPk; //로그인한 사용자의 pk값
+
     private Integer role; //사용자 권한, ROLE_권한이름
 
 }

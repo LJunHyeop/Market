@@ -32,11 +32,11 @@ public class SecurityConfiguration {
                 .formLogin(form -> form.disable()) // Form 로그인 비활성화
                 .csrf(csrf -> csrf.disable()) // CSRF 보호 비활성화
                 .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/swagger/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/swagger/**", "/v3/api-docs/**").permitAll()
 //                        .requestMatchers("/api/user/sign-up").permitAll() // 회원가입 API는 익명 사용자도 접근 가능하게 설정
 //                        .requestMatchers( "api/user**", "api/user/**" ).authenticated() // /api/user 하위 경로는 인증 필요
 //                        .requestMatchers("/api/admin/**").hasRole("ADMIN") // /api/admin/** 경로는 ADMIN 권한 필요
-                        .anyRequest().permitAll() // 그 외 모든 요청은 허용
+                                .anyRequest().permitAll() // 그 외 모든 요청은 허용
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exception -> exception

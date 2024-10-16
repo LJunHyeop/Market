@@ -10,17 +10,17 @@ import static com.example.market.user.config.GlobalConst.SUCCESS_MESSAGE;
 
 @Getter
 @Setter
-public class SignInResponseDto extends ResponseDto{
+public class InfoUpdateResponseDto extends ResponseDto{
 
-    private String accessToken;
+    private String userName;
 
-    private SignInResponseDto(String accessToken) {
+    private InfoUpdateResponseDto(String userName) {
         super(SUCCESS_CODE, SUCCESS_MESSAGE);
-        this.accessToken = accessToken;
+        this.userName = userName;
     }
 
-    public static ResponseEntity<SignInResponseDto> success(String accessToken) {
-        SignInResponseDto result = new SignInResponseDto(accessToken);
+    public static ResponseEntity<InfoUpdateResponseDto> success(String userName) {
+        InfoUpdateResponseDto result = new InfoUpdateResponseDto(userName);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 }

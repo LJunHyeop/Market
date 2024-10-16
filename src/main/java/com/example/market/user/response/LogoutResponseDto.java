@@ -8,19 +8,17 @@ import org.springframework.http.ResponseEntity;
 import static com.example.market.user.config.GlobalConst.SUCCESS_CODE;
 import static com.example.market.user.config.GlobalConst.SUCCESS_MESSAGE;
 
-@Getter
 @Setter
-public class SignInResponseDto extends ResponseDto{
+@Getter
+public class LogoutResponseDto extends ResponseDto{
 
-    private String accessToken;
-
-    private SignInResponseDto(String accessToken) {
+    private LogoutResponseDto() {
         super(SUCCESS_CODE, SUCCESS_MESSAGE);
-        this.accessToken = accessToken;
     }
 
-    public static ResponseEntity<SignInResponseDto> success(String accessToken) {
-        SignInResponseDto result = new SignInResponseDto(accessToken);
+    public static ResponseEntity<ResponseDto> success() {
+        ResponseDto result = new ResponseDto();
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
+
 }
