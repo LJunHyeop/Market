@@ -38,7 +38,7 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "USER_BOOK_RESPONSE_ERROR_CODE",
             content = @Content(
                     mediaType = "application/json", schema = @Schema(implementation = SignInResponseDto.class)))
-    public ResponseEntity<?super SignInResponseDto> signIn(HttpServletResponse res, @ParameterObject SignInRequestDto dto) {
+    public ResponseEntity<?super SignInResponseDto> signIn(HttpServletResponse res, @RequestBody SignInRequestDto dto) {
         return userservice.signInUser(res, dto);
     }
 

@@ -76,12 +76,9 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public ResponseEntity<? super SignInResponseDto> signInUser(HttpServletResponse res, SignInRequestDto dto) {
-
-
         String accessToken = null;
         String refreshToken = null;
         try {
-
             if (dto.getUserEmail() == null || dto.getUserEmail().isEmpty()) {
                 throw new CustomException(CommonErrorCode.VF);
             }
@@ -120,6 +117,7 @@ public class UserServiceImpl implements UserService {
             e.printStackTrace();
             throw new CustomException(CommonErrorCode.DBE);
         }
+
         return SignInResponseDto.success(accessToken);
     }
 

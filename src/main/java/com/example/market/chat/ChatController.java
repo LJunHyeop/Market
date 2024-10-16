@@ -90,11 +90,15 @@ public class ChatController {
         if (loginUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+
         // 메시지 저장
         chatService.saveMessage(chatMsgDto);
 
+        // 클라이언트에게 알림 전송을 위한 메시지 생성
+        String notificationMessage = String.format("%s: %s", loginUser.getUserName(), chatMsgDto.getChatMsg());
+
         // SSE를 통해 클라이언트에게 알림 전송
-        sseController.notifyChatClients(); // 채팅 알림 전송
+        sseController.notifyChatClients(notificationMessage); // 알림 메시지를 전달
 
         return ResponseEntity.ok().build();
     }
@@ -110,5 +114,14 @@ public class ChatController {
     private User getCurrentUser(MyUser myUser) {
 
         return userRepository.findById(myUser.getUserPk()).orElse(null);
+    }
+    //채팅방 조회
+    @GetMapping("/room/{otherUserId}")
+    public ResponseEntity<ChatRoom> getChatRoomBetweenUsers(@PathVariable Long otherUserId) {
+        ChatRoom chatRoom = chatService.getChatRoomBetweenUsers(otherUserId);
+        if (chatRoom != null) {
+            return ResponseEntity.ok(chatRoom); // 채팅방이 존재하면 200 OK 반환
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // 채팅방이 존재하지 않으면 404 NOT FOUND 반환
     }
 }
