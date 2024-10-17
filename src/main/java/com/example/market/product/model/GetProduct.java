@@ -14,10 +14,13 @@ public class GetProduct {
     private String productComment ;
     private int productLiks ; 
 
+    private String pic ;
+
     public GetProduct(Product product){
         this.productPk = product.getProductPk() ;
         this.productName = product.getProductName() ;
         this.productComment = product.getProductComment() ;
         this.productLiks = product.getProductLike() ;
+
     }
 }
