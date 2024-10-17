@@ -22,27 +22,30 @@ public class UserAssService {
     private final UserRepository userRepository;
     private final AuthenticationFacade authenticationFacade;
 
-    public void assUserManner(AssReq assReq){
-        Long userPk=assReq.getUserPk();
-        List<Long> reply=assReq.getReplyList();
-        // 값을 저장할 사용자 정보
-        UserAssessment userAssessment=new UserAssessment();
-        User user=userRepository.getReferenceById(userPk);
-        userAssessment.setUser(user);
-        for(Long mannerPk:reply){
+    public void assUserManner(AssReq assReq) {
+        Long userPk = assReq.getUserPk();
+        List<Long> reply = assReq.getReplyList();
+        User user = userRepository.getReferenceById(userPk); // 사용자 정보 조회
+
+        for (Long mannerPk : reply) {
+            UserAssessment userAssessment = new UserAssessment(); // 각 루프에서 새로운 객체 생성
+            userAssessment.setUser(user);
             userAssessment.setManner(mannerRepository.getReferenceById(mannerPk));
+
             // 거래자가 체크한 항목을 이미 받은 적이 있는지 확인
-            UserAssessment check=userAssessmentRepository.findByUser_userPkAndManner_MannerId(userPk, mannerPk);
-            if(check==null){
+            UserAssessment check = userAssessmentRepository.findByUser_userPkAndManner_MannerId(userPk, mannerPk);
+
+            if (check == null) {
                 // 해당 유저가 그 평가를 받은 적 없다면 새로 넣기
                 userAssessment.setCount(1);
                 userAssessmentRepository.save(userAssessment);
             }
-            // 있으면 그 값에 1을 추가해서 update
-            userAssessment.setCount(check.getCount()+1);
-            userAssessmentRepository.save(userAssessment);
+                // 있으면 그 값에 1을 추가해서 update
+                check.setCount(check.getCount() + 1); // 기존 객체 업데이트
+                userAssessmentRepository.save(check); // 수정된 객체 저장
         }
     }
+
     public List<AssRes> getMyManner(){
         Long userPk=authenticationFacade.getLoginUserPk();
         User user=userRepository.getReferenceById(userPk);
