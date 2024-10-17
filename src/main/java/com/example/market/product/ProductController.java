@@ -87,6 +87,7 @@ public class ProductController {
         String token = null ;
         List<GetProduct> list = service.getAllProduct(token, p, page, size) ;
 
+
         // 전체 항목 수를 기반으로 총 페이지 수 계산
         long totalCount = service.getTotalCount(p) ;
         int totalPages = (int) Math.ceil((double) totalCount / size) ;

@@ -11,4 +11,7 @@ import java.util.List;
 public interface ProductPhotoRepository extends JpaRepository<ProductPhoto, Long> {
     @Query("SELECT p FROM ProductPhoto p WHERE p.product = :product")
     List<ProductPhoto> findAllByProduct(Product product) ;
+
+    @Query("SELECT p FROM ProductPhoto p WHERE p.product.productPk = :productPk")
+    List<ProductPhoto> findAllByProductPk(long productPk) ;
 }
