@@ -7,19 +7,25 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.market.common.CustomFileUtils;
 import com.example.market.entity.Product;
+import com.example.market.entity.ProductLike;
 import com.example.market.entity.ProductPhoto;
 import com.example.market.entity.User;
+import com.example.market.jwt.JwtTokenProvider;
 import com.example.market.product.model.GetProduct;
 import com.example.market.product.model.PostProductRegistrationReq;
 import com.example.market.product.model.UpdateProductReq;
 import com.example.market.product.model.UserFindRes;
+import com.example.market.product.repository.ProductLikeRepository;
 import com.example.market.product.repository.ProductPhotoRepository;
 import com.example.market.product.repository.ProductRepository;
+import com.example.market.security.MyUserDetail;
 import com.example.market.user.repository.UserRepository;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -35,27 +41,24 @@ public class ProductService {
     private final ProductPhotoRepository photoRepository ;
     private final CustomFileUtils customFileUtils ;
     private final UserRepository userRepository ;
-    // private final UserRepository userRepository ;
-
+    private final JwtTokenProvider jwtTokenProvider ;
+    private final ProductLikeRepository likeRepository ;
 
     // 상품 등록
     @Transactional
     public int postProduct(String token, PostProductRegistrationReq p, List<MultipartFile> pics){
 
 
-        // Authentication auth = jwtTokenProvider.getAuthentication(token) ;
+        Authentication auth = jwtTokenProvider.getAuthentication(token) ;
+        SecurityContextHolder.getContext().setAuthentication(auth) ;
+        MyUserDetail userDetails = (MyUserDetail) auth.getPrincipal();
+        long userPk = userDetails.getMyUser().getUserPk() ;
 
-        // User user = userRepository.findById(p.getUserPk()) ;
-        User user = userRepository.getReferenceById(p.getUserPk()) ;
-        // UserFindRes user = mapper.getUser(p.getUserPk()) ;
+        User user = userRepository.getReferenceById(userPk) ;
 
         log.info("user: {}", user) ;
         System.out.println(user) ;
         
-
-        if (user == null) {
-            throw new RuntimeException("User not found with userPk: " + p.getUserPk());
-        }
         // new User() ;
         
         log.info("p: {}", p) ;
@@ -66,7 +69,6 @@ public class ProductService {
         product.setProductName(p.getProductName()) ;
         product.setProductPrice(p.getProductPrice()) ;
         product.setProductComment(p.getProductComment()) ;
-        // product.setUser(auth) ;
         repository.save(product) ;
         log.info("Saved product with ID: {}", product.getProductPk()) ;
         // product.setProductLike(p.getProductLike()) ;
@@ -112,10 +114,19 @@ public class ProductService {
     // 상품 삭제
     @Transactional
     public int delProduct(String token, Long pk){
-        // Authentication auth = jwtTokenProvider.getAuthentication(token) ;
-        
-        Product product = new Product() ;
-        repository.findById(pk) ;
+        Authentication auth = jwtTokenProvider.getAuthentication(token) ;
+        SecurityContextHolder.getContext().setAuthentication(auth) ;
+        MyUserDetail userDetails = (MyUserDetail) auth.getPrincipal();
+        long userPk = userDetails.getMyUser().getUserPk() ;
+
+        Product product = repository.getReferenceById(pk) ;
+
+        User user = userRepository.getReferenceById(userPk) ;
+        if(product.getUser() != user){
+            throw new RuntimeException("자신의 게시물이 아니면 삭제할 수 없습니다.") ;
+        }
+
+        // new Product() ;
         
         List<ProductPhoto> productPhoto = new ArrayList<>() ;
         photoRepository.findAllByProduct(product) ;
@@ -145,14 +156,26 @@ public class ProductService {
         return 1 ;
     }
 
+    // 상품 수정
     @Transactional
     public int updateProduct(String token, UpdateProductReq p, List<MultipartFile> pics){
-        // Authentication auth = jwtTokenProvider.getAuthentication(token) ;
+        Authentication auth = jwtTokenProvider.getAuthentication(token) ;
+        SecurityContextHolder.getContext().setAuthentication(auth) ;
+        MyUserDetail userDetails = (MyUserDetail) auth.getPrincipal();
+        long userPk = userDetails.getMyUser().getUserPk() ;
 
 
         // Optional로 Product 조회 및 예외 처리
-        Product product = repository.findById(p.getProductPk())
-                .orElseThrow(() -> new RuntimeException("상품을 찾을 수 없습니다."));
+        Product product = repository.getReferenceById(p.getProductPk()) ;
+
+        if(product == null) {
+            throw new RuntimeException("상품을 찾을 수 없습니다.");
+        }
+
+        User user = userRepository.getReferenceById(userPk) ;
+        if(product.getUser() != user){
+            throw new RuntimeException("자신의 게시물이 아니면 수정할 수 없습니다.") ;
+        }
 
         // Product 업데이트
         product.setProductName(p.getProductName());
@@ -199,8 +222,6 @@ public class ProductService {
 
     // 전체 검색, 검색어 검색
     public List<GetProduct> getAllProduct(String token, String p, int page, int size){
-        // Authentication auth = jwtTokenProvider.getAuthentication(token) ;
-        
         Pageable pageable = PageRequest.of(page, size) ;
         Page<Product> productsPage ;
 
@@ -214,7 +235,22 @@ public class ProductService {
 
         // Page<Product> 결과를 List<GetProduct>로 변환
         List<GetProduct> productList = productsPage.stream()
-            .map(product -> new GetProduct(product)) // Product를 GetProduct로 변환하는 로직
+            .map(product -> {
+                List<ProductPhoto> productPhoto = photoRepository.findAllByProductPk(product.getProductPk());
+                String pictureName;
+                // 사진 리스트가 비어있는지 확인 후 처리
+                if (productPhoto != null && !productPhoto.isEmpty()) {
+                    pictureName = productPhoto.get(0).getProductPhoto(); // 적절한 메소드로 사진 이름 가져오기
+                } else {
+                    pictureName = "default.jpg"; // 사진이 없을 경우 기본값 설정
+                }
+
+                // GetProduct 객체 생성하면서 사진 URL 추가
+                GetProduct getProduct = new GetProduct(product);
+                getProduct.setPic("http://localhost:8080/pic/" + product.getProductPk() + "/" + pictureName);
+
+                return getProduct;
+            }) // Product를 GetProduct로 변환하는 로직
             .collect(Collectors.toList()) ;
 
         return productList ;
@@ -222,17 +258,25 @@ public class ProductService {
 
     // 상품 상세조회
     public Product getSelectProduct(String token, long p){
-        // Authentication auth = jwtTokenProvider.getAuthentication(token) ;
-        Product product = new Product() ;
-        repository.findById(p) ;
+        Authentication auth = jwtTokenProvider.getAuthentication(token) ;
+        SecurityContextHolder.getContext().setAuthentication(auth) ;
+        MyUserDetail userDetails = (MyUserDetail) auth.getPrincipal();
+        long userPk = userDetails.getMyUser().getUserPk() ;
+
+        Product product = repository.getReferenceById(p) ;
+        // new Product() ;
         return product ;
     }
 
     // 상품 사진 조회
     public List<ProductPhoto> getSelectPhoto(String token, long p){
-        // Authentication auth = jwtTokenProvider.getAuthentication(token) ;
+        Authentication auth = jwtTokenProvider.getAuthentication(token) ;
+        SecurityContextHolder.getContext().setAuthentication(auth) ;
+        MyUserDetail userDetails = (MyUserDetail) auth.getPrincipal();
+        long userPk = userDetails.getMyUser().getUserPk() ;
+
         // Product 객체 가져오기
-        Product product = repository.findById(p).orElse(null);
+        Product product = repository.getReferenceById(p) ;
         if (product == null) {
             throw new RuntimeException("상품이 존재하지 않습니다.") ;
         }
@@ -259,11 +303,26 @@ public class ProductService {
 
     // 상품 좋아요
     public int putProductLike(String token, long p) {
-        // Authentication auth = jwtTokenProvider.getAuthentication(token) ;
+        Authentication auth = jwtTokenProvider.getAuthentication(token) ;
+        SecurityContextHolder.getContext().setAuthentication(auth) ;
+        MyUserDetail userDetails = (MyUserDetail) auth.getPrincipal();
+        long userPk = userDetails.getMyUser().getUserPk() ;
 
+        User user = userRepository.getReferenceById(userPk) ;
         Product product = repository.getReferenceById(p) ;
 
+        ProductLike allLike = likeRepository.findProductLikeByUserPkAndProductPk(userPk, p) ;
 
-        return 0 ;
+        if(allLike == null ){
+            ProductLike like = new ProductLike() ;
+            like.setProduct(product) ;
+            like.setUser(user) ;
+            likeRepository.save(like) ;
+            return 1 ;
+        } else {
+            likeRepository.delete(allLike) ;
+            return 0 ;
+        }
+
     }
 }
