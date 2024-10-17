@@ -112,7 +112,7 @@ public class ChatController {
     }
 
     private User getCurrentUser(MyUser myUser) {
-        return userRepository.findById(myUser.getUserPk()).orElse(null) ;
+        return userRepository.findById(myUser.getUserPk()).orElse(null);
     }
 
     //채팅방 조회
