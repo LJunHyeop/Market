@@ -20,9 +20,9 @@ public class MannerService {
         List<MannerRes> answer=new ArrayList<>();
         for(Manner manner:mannerList){
             MannerRes res=new MannerRes();
-            manner.setMannerId(manner.getMannerId());
-            manner.setSentence(manner.getSentence());
-            manner.setType(manner.getType());
+            res.setMannerId(manner.getMannerId());
+            res.setSentence(manner.getSentence());
+            res.setType(manner.getType());
             answer.add(res);
         }
         return answer;
