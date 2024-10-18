@@ -45,4 +45,8 @@ public class Product extends UpdateAt {
     @Column
     @Comment("상품 게시글")
     private String productComment ;
+
+    @Column
+    @Comment("거래 상태 1: 거래중, 2: 거래완료, 3: 평가까지 완료")
+    private int productStatus = 1 ;
 }
