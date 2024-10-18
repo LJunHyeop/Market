@@ -50,6 +50,7 @@ public class ProductController {
     @Operation(summary = "상품등록")
     public ResponseEntity postProduct(HttpServletRequest req, @RequestPart PostProductRegistrationReq p, @RequestPart List<MultipartFile> pics){
         String token = tokenService.resolveToken(req) ;
+        log.info("token : {}",token);
         int result = service.postProduct(token, p, pics) ;
         return ResponseEntity.ok().body(result) ;
     }

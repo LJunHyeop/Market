@@ -48,7 +48,6 @@ public class ProductService {
     @Transactional
     public int postProduct(String token, PostProductRegistrationReq p, List<MultipartFile> pics){
 
-
         Authentication auth = jwtTokenProvider.getAuthentication(token) ;
         SecurityContextHolder.getContext().setAuthentication(auth) ;
         MyUserDetail userDetails = (MyUserDetail) auth.getPrincipal();
