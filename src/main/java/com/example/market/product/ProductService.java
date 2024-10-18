@@ -319,11 +319,35 @@ public class ProductService {
             like.setProduct(product) ;
             like.setUser(user) ;
             likeRepository.save(like) ;
+            product.setProductLike(product.getProductLike() + 1) ;
+            repository.save(product) ;
             return 1 ;
         } else {
             likeRepository.delete(allLike) ;
+            product.setProductLike(product.getProductLike() - 1) ;
+            repository.save(product) ;
             return 0 ;
         }
 
+    }
+
+    // 거래완료 컬럼 수정
+    public int putProductTransaction(String token, long productPk){
+        Authentication auth = jwtTokenProvider.getAuthentication(token) ;
+        SecurityContextHolder.getContext().setAuthentication(auth) ;
+        MyUserDetail userDetails = (MyUserDetail) auth.getPrincipal();
+        long userId = userDetails.getMyUser().getUserPk() ;
+
+        User user = userRepository.getReferenceById(userId) ;
+        Product product = repository.getReferenceById(productPk) ;
+
+        if(product.getUser() != user){
+            throw new RuntimeException("본인 상품만 수정할 수 있습니다.") ;
+        }
+
+        product.setProductStatus(2) ;
+        repository.save(product) ;
+
+        return 1 ;
     }
 }
