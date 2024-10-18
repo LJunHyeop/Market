@@ -75,37 +75,38 @@ public class ProductService {
 
 
         List<String> picName = new ArrayList<>() ;
+        if(pics != null){
+            try{
+                List<ProductPhoto> picsList = new ArrayList<>() ;
+                // 파일 저장 경로 설정 및 폴더 생성
+                String path = String.format("pic/%d", product.getProductPk()) ;
+                log.info("path: {}", path);
+                customFileUtils.makeFolders(path) ;
 
-        try{
-            List<ProductPhoto> picsList = new ArrayList<>() ;
-            // 파일 저장 경로 설정 및 폴더 생성
-            String path = String.format("pic/%d", product.getProductPk()) ;
-            log.info("path: {}", path);
-            customFileUtils.makeFolders(path) ;
+                for(MultipartFile pic : pics){
+                    // 랜덤 파일 이름 생성 및 파일 저장
+                    String saveFileName = customFileUtils.makeRandomFileName(pic) ;
+                    log.info("saveFileName: {}", saveFileName) ;
 
-            for(MultipartFile pic : pics){
-                // 랜덤 파일 이름 생성 및 파일 저장
-                String saveFileName = customFileUtils.makeRandomFileName(pic) ;
-                log.info("saveFileName: {}", saveFileName) ;
+                    String target = String.format("%s/%s", path, saveFileName) ;
+                    log.info("Trying to load file from: {}", customFileUtils.uploadPath);
+                    log.info("Saving file to: {}", target);
 
-                String target = String.format("%s/%s", path, saveFileName) ;
-                log.info("Trying to load file from: {}", customFileUtils.uploadPath);
-                log.info("Saving file to: {}", target);
+                    customFileUtils.transferTo(pic, target) ;
 
-                customFileUtils.transferTo(pic, target) ;
+                    picName.add(saveFileName) ;
 
-                picName.add(saveFileName) ;
+                    ProductPhoto productPhoto = new ProductPhoto() ;
+                    productPhoto.setProductPhoto(saveFileName) ;
+                    productPhoto.setProduct(product) ;
 
-                ProductPhoto productPhoto = new ProductPhoto() ;
-                productPhoto.setProductPhoto(saveFileName) ;
-                productPhoto.setProduct(product) ;
-
-                picsList.add(productPhoto) ;
-                photoRepository.save(productPhoto) ;
+                    picsList.add(productPhoto) ;
+                    photoRepository.save(productPhoto) ;
+                }
+            } catch(Exception e) {
+                e.printStackTrace() ;
+                throw new RuntimeException("상품 등록 오류") ;
             }
-        } catch(Exception e) {
-            e.printStackTrace() ;
-            throw new RuntimeException("상품 등록 오류") ;
         }
 
         return 1 ;
