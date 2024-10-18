@@ -4,9 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.example.market.jwt.JwtTokenProvider;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.token.TokenService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,13 +43,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Tag(name="상품", description="상품 CRUD")
 public class ProductController {
     private final ProductService service ;
+    private final JwtTokenProvider tokenService ;
 
     // 상품등록
     @PostMapping("/registration")
     @Operation(summary = "상품등록")
     public ResponseEntity postProduct(HttpServletRequest req, @RequestPart PostProductRegistrationReq p, @RequestPart List<MultipartFile> pics){
-        // String token = tokenProvider.resolveToken(req) ;
-        String token = null ;
+        String token = tokenService.resolveToken(req) ;
         int result = service.postProduct(token, p, pics) ;
         return ResponseEntity.ok().body(result) ;
     }
@@ -56,7 +58,7 @@ public class ProductController {
     @DeleteMapping("/delete")
     @Operation(summary = "상품삭제")
     public ResponseEntity delProduct(HttpServletRequest req, @ModelAttribute @ParameterObject Long productPk){
-        String token = null ;
+        String token = tokenService.resolveToken(req) ;
         int result = service.delProduct(token, productPk) ;
 
 
@@ -67,7 +69,7 @@ public class ProductController {
     @PutMapping("/update")
     @Operation(summary = "상품 수정")
     public ResponseEntity updateProduct(HttpServletRequest req, @RequestPart UpdateProductReq p, @RequestPart List<MultipartFile> pics){
-        String token = null ;
+        String token = tokenService.resolveToken(req) ;
         int result = service.updateProduct(token, p, pics) ;
 
         return ResponseEntity.ok().body(result) ;
@@ -84,7 +86,7 @@ public class ProductController {
         @RequestParam(defaultValue = "15") int size
     ) 
     {
-        String token = null ;
+        String token = tokenService.resolveToken(req) ;
         List<GetProduct> list = service.getAllProduct(token, p, page, size) ;
 
 
@@ -111,7 +113,7 @@ public class ProductController {
     @GetMapping("/selectGet")
     @Operation(summary = "상세조회", description = "p = 상품 PK값")
     public ResponseEntity getSelectProduct(HttpServletRequest req, @ModelAttribute @ParameterObject long p){
-        String token = null ;
+        String token = tokenService.resolveToken(req) ;
         
         Product product = service.getSelectProduct(token, p) ;
         List<ProductPhoto> productPhoto = service.getSelectPhoto(token, p) ;
@@ -126,7 +128,7 @@ public class ProductController {
     @PutMapping("/updateLike")
     @Operation(summary = "상품 좋아요", description = "p = 상품 PK값")
     public ResponseEntity putMethodName(HttpServletRequest req, @ModelAttribute @ParameterObject long p) {
-        String token = null ;
+        String token = tokenService.resolveToken(req) ;
         int result = service.putProductLike(token, p) ;
         
         return new ResponseEntity<>(result, HttpStatus.OK) ;
