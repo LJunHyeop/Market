@@ -2,6 +2,7 @@ package com.example.market.user_assessment;
 
 import com.example.market.user_assessment.common.AssReq;
 import com.example.market.user_assessment.common.AssRes;
+import com.example.market.user_assessment.common.TransactionRes;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,11 @@ import java.util.List;
 @Tag(name="평가", description="평가 관련")
 public class UserAssController {
     private final UserAssService service;
+
+    @GetMapping("/trade")
+    @Operation(summary="거래 내역 조회")
+    public List<TransactionRes> readTradeHistory(){return service.readTradeHistory();}
+
     @PostMapping("/deal")
     @Operation(summary = "거래 후 평가")
     public void assUserManner(@RequestBody AssReq assReq){

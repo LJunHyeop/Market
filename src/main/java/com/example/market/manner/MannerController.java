@@ -16,9 +16,6 @@ public class MannerController {
     private final MannerService service;
 
 //    @PostMapping
-    @GetMapping("/trade")
-    @Operation(summary="거래 내역 조회")
-    public List<Long> readTradeHistory(){return null;}
 
     @GetMapping("/assessment")
     @Operation(summary = "거래 후 평가 페이지")
