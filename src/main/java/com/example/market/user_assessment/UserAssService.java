@@ -92,6 +92,9 @@ public class UserAssService {
                 check.setCount(check.getCount() + 1); // 기존 객체 업데이트
                 userAssessmentRepository.save(check); // 수정된 객체 저장
         }
+        Product product=productRepository.getReferenceById(assReq.getProductPk());
+        product.setProductStatus(3);
+        productRepository.save(product);
     }
 
     // 나의 매너 평가 조회하기
