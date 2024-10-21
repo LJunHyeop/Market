@@ -134,4 +134,19 @@ public class ProductController {
         
         return new ResponseEntity<>(result, HttpStatus.OK) ;
     }
+
+    @PutMapping("/TransactionCompleted")
+    @Operation(summary = "거래 완료", description = "1: 거래중, 2: 거래완료, 3: 평가완료, userPk: 거래한 상대 pk")
+    public ResponseEntity transactionCompleted
+    (
+        HttpServletRequest req,
+        @ModelAttribute @ParameterObject long productPk,
+        @ModelAttribute @ParameterObject long userPk
+    )
+    {
+        String token = tokenService.resolveToken(req) ;
+        int result = service.putProductTransaction(token, productPk, userPk) ;
+
+        return new ResponseEntity<>(result, HttpStatus.OK) ;
+    }
 }

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.example.market.entity.*;
+import com.example.market.product.repository.TransactionRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -13,22 +15,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.market.common.CustomFileUtils;
-import com.example.market.entity.Product;
-import com.example.market.entity.ProductLike;
-import com.example.market.entity.ProductPhoto;
-import com.example.market.entity.User;
 import com.example.market.jwt.JwtTokenProvider;
 import com.example.market.product.model.GetProduct;
 import com.example.market.product.model.PostProductRegistrationReq;
 import com.example.market.product.model.UpdateProductReq;
-import com.example.market.product.model.UserFindRes;
 import com.example.market.product.repository.ProductLikeRepository;
 import com.example.market.product.repository.ProductPhotoRepository;
 import com.example.market.product.repository.ProductRepository;
 import com.example.market.security.MyUserDetail;
 import com.example.market.user.repository.UserRepository;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +39,7 @@ public class ProductService {
     private final UserRepository userRepository ;
     private final JwtTokenProvider jwtTokenProvider ;
     private final ProductLikeRepository likeRepository ;
+    private final TransactionRepository transactionRepository ;
 
     // 상품 등록
     @Transactional
@@ -318,11 +315,42 @@ public class ProductService {
             like.setProduct(product) ;
             like.setUser(user) ;
             likeRepository.save(like) ;
+            product.setProductLike(product.getProductLike() + 1) ;
+            repository.save(product) ;
             return 1 ;
         } else {
             likeRepository.delete(allLike) ;
+            product.setProductLike(product.getProductLike() - 1) ;
+            repository.save(product) ;
             return 0 ;
         }
 
+    }
+
+    // 거래완료 컬럼 수정
+    public int putProductTransaction(String token, long productPk, long UserPk){
+        Authentication auth = jwtTokenProvider.getAuthentication(token) ;
+        SecurityContextHolder.getContext().setAuthentication(auth) ;
+        MyUserDetail userDetails = (MyUserDetail) auth.getPrincipal();
+        long userId = userDetails.getMyUser().getUserPk() ;
+
+        User user = userRepository.getReferenceById(userId) ;
+        Product product = repository.getReferenceById(productPk) ;
+        User userEnd = userRepository.getReferenceById(UserPk) ;
+
+        if(product.getUser() != user){
+            throw new RuntimeException("본인 상품만 수정할 수 있습니다.") ;
+        }
+
+        Transaction transaction = new Transaction() ;
+        transaction.setProduct(product) ;
+        // 거래한 유저 pk
+        transaction.setUser(userEnd) ;
+        transactionRepository.save(transaction) ;
+
+        product.setProductStatus(2) ;
+        repository.save(product) ;
+
+        return 1 ;
     }
 }
