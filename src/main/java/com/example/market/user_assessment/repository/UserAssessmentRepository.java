@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface UserAssessmentRepository extends JpaRepository<UserAssessment, Long> {
     List<UserAssessment> findByUser(User user);
+
     UserAssessment findByUser_userPkAndManner_MannerId(Long userPk, Long mannerId);
 
 }

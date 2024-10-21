@@ -39,10 +39,11 @@ public class UserAssService {
                 // 해당 유저가 그 평가를 받은 적 없다면 새로 넣기
                 userAssessment.setCount(1);
                 userAssessmentRepository.save(userAssessment);
-            }
+            }else {
                 // 있으면 그 값에 1을 추가해서 update
                 check.setCount(check.getCount() + 1); // 기존 객체 업데이트
                 userAssessmentRepository.save(check); // 수정된 객체 저장
+            }
         }
     }
 

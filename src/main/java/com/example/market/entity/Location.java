@@ -1,12 +1,16 @@
 package com.example.market.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Comment;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "location")
-public class Location  extends  UpdateAt{
+public class Location extends UpdateAt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int locationPk;
@@ -28,4 +32,15 @@ public class Location  extends  UpdateAt{
     @Comment("행정 구역")
     private String administrativeDistrict;
 
+
+    @Override
+    public String toString() {
+        return "Location{" +
+                "locationPk=" + locationPk +
+                ", userPk=" + userPk +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", administrativeDistrict='" + administrativeDistrict + '\'' +
+                '}';
+    }
 }
