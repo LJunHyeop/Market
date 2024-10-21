@@ -23,6 +23,7 @@ import java.util.List;
 @RequestMapping("/api/report")
 @Tag(name="신고", description="신고합니다. 지수현")
 public class ReportController {
+
     private final ReportService service;
 
 
