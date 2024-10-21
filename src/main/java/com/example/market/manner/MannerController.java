@@ -16,6 +16,7 @@ public class MannerController {
     private final MannerService service;
 
 //    @PostMapping
+
     @GetMapping("/assessment")
     @Operation(summary = "거래 후 평가 페이지")
     public List<MannerRes> readManner(){

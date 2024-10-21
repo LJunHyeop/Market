@@ -1,12 +1,18 @@
 package com.example.market.user_assessment;
 
+import com.example.market.entity.Product;
+import com.example.market.entity.ProductPhoto;
 import com.example.market.entity.User;
 import com.example.market.entity.UserAssessment;
 import com.example.market.manner.repository.MannerRepository;
+import com.example.market.product.repository.ProductPhotoRepository;
+import com.example.market.product.repository.ProductRepository;
+import com.example.market.product.repository.TransactionRepository;
 import com.example.market.security.AuthenticationFacade;
 import com.example.market.user.repository.UserRepository;
 import com.example.market.user_assessment.common.AssReq;
 import com.example.market.user_assessment.common.AssRes;
+import com.example.market.user_assessment.common.TransactionRes;
 import com.example.market.user_assessment.repository.UserAssessmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,11 +23,53 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UserAssService {
+    private final AuthenticationFacade authenticationFacade;
+
     private final UserAssessmentRepository userAssessmentRepository;
     private final MannerRepository mannerRepository;
     private final UserRepository userRepository;
-    private final AuthenticationFacade authenticationFacade;
+    private final ProductRepository productRepository;
+    private final ProductPhotoRepository productPhotoRepository;
+    private final TransactionRepository transactionRepository;
 
+
+    // 평가 가능 목록 조회 (a.k.a 거래 완료 리스트)
+    public List<TransactionRes> readTradeHistory(){
+        Long userPk=authenticationFacade.getLoginUserPk();
+        User user=userRepository.findUserByUserPk(userPk);
+
+        //리턴해줄 리스트
+        List<TransactionRes> answer=new ArrayList();
+
+        // 거래자가 나인 완료 거래 조회
+        List<Long> transactionList=transactionRepository.findProductByUser(user);
+        for(Long productPk:transactionList){
+            // 각각의 상품의 정보 조회
+            Product product=productRepository.getReferenceById(productPk);
+            if(product.getProductStatus()!=2){ // 거래 완료가 아니면 지움
+                return null;
+            }
+            // 판매자 이름, 물건, 사진 조회
+            List<ProductPhoto> photos=productPhotoRepository.findAllByProduct(product);
+            ProductPhoto thumbnail=photos.get(0);
+            String partnerName=product.getUser().getUserName();
+            String productName=product.getProductName();
+            String photoName=thumbnail.getProductPhoto();
+
+            // 리턴할 리스트 제조
+            TransactionRes res=new TransactionRes();
+            res.setProductPk(productPk);
+            res.setPhotoName(photoName);
+            res.setProductName(productName);
+            res.setPartnerName(partnerName);
+            answer.add(res);
+        }
+
+        return answer;
+    }
+
+
+    // 거래 상대 평가하기
     public void assUserManner(AssReq assReq) {
         Long userPk = assReq.getUserPk();
         List<Long> reply = assReq.getReplyList();
@@ -45,8 +93,12 @@ public class UserAssService {
                 userAssessmentRepository.save(check); // 수정된 객체 저장
             }
         }
+        Product product=productRepository.getReferenceById(assReq.getProductPk());
+        product.setProductStatus(3);
+        productRepository.save(product);
     }
 
+    // 나의 매너 평가 조회하기
     public List<AssRes> getMyManner(){
         Long userPk=authenticationFacade.getLoginUserPk();
         User user=userRepository.getReferenceById(userPk);
@@ -62,6 +114,7 @@ public class UserAssService {
         return answer;
     }
 
+    // 나의 매너 온도 계산
     public int getMannerScore(){
         Long userPk=authenticationFacade.getLoginUserPk();
         User user=userRepository.getReferenceById(userPk);
